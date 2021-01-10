@@ -1,0 +1,2 @@
+C:\Users\Akeina\Desktop\New folder\x64\Debug\CSC8503Common.pdb
+C:\Users\Akeina\Desktop\New folder\CSC8503\CSC8503Common\x64\Debug\CSC8503Common.pdb

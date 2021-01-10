@@ -1,0 +1,7 @@
+﻿  Main.cpp
+C:\Users\Akeina\Desktop\Coursework\CSC8503\GameTech\Main.cpp(170,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Coursework\CSC8503\GameTech\Main.cpp(188,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Coursework\CSC8503\GameTech\Main.cpp(261,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Coursework\CSC8503\GameTech\Main.cpp(367,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Coursework\CSC8503\GameTech\Main.cpp(413,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+LINK : fatal error LNK1104: cannot open file 'CSC8503Common.lib'

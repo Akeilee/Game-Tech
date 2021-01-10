@@ -1,0 +1,6 @@
+C:\Uni\Games Engineering Code\game-engineering-codebase\x64\Debug\Common.pdb
+C:\Uni\Games Engineering Code\game-engineering-codebase\Common\x64\Debug\Common.pdb
+C:\Users\Akeina\Desktop\New folder\x64\Debug\Common.pdb
+C:\Users\Akeina\Desktop\New folder\Common\x64\Debug\Common.pdb
+C:\Users\Akeina\Desktop\Coursework\x64\Debug\Common.pdb
+C:\Users\Akeina\Desktop\Coursework\Common\x64\Debug\Common.pdb

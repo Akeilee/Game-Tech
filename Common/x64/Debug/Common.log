@@ -1,0 +1,5 @@
+﻿  SimpleFont.cpp
+C:\Users\Akeina\Desktop\Coursework\Common\SimpleFont.cpp(85,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Coursework\Common\SimpleFont.cpp(88,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Coursework\Common\SimpleFont.cpp(90,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Common.vcxproj -> C:\Users\Akeina\Desktop\Coursework\x64\Debug\Common.lib
