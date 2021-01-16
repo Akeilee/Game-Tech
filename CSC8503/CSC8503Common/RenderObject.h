@@ -12,8 +12,7 @@ namespace NCL {
 		class Transform;
 		using namespace Maths;
 
-		class RenderObject
-		{
+		class RenderObject {
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader);
 			~RenderObject();
@@ -26,15 +25,15 @@ namespace NCL {
 				return texture;
 			}
 
-			MeshGeometry*	GetMesh() const {
+			MeshGeometry* GetMesh() const {
 				return mesh;
 			}
 
-			Transform*		GetTransform() const {
+			Transform* GetTransform() const {
 				return transform;
 			}
 
-			ShaderBase*		GetShader() const {
+			ShaderBase* GetShader() const {
 				return shader;
 			}
 
@@ -55,10 +54,10 @@ namespace NCL {
 			}
 
 		protected:
-			MeshGeometry*	mesh;
-			TextureBase*	texture;
-			ShaderBase*		shader;
-			Transform*		transform;
+			MeshGeometry* mesh;
+			TextureBase* texture;
+			ShaderBase* shader;
+			Transform* transform;
 			Vector4			colour;
 			Vector4			oriColour;
 		};

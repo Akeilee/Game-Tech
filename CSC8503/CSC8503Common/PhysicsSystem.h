@@ -4,7 +4,7 @@
 
 namespace NCL {
 	namespace CSC8503 {
-		class PhysicsSystem	{
+		class PhysicsSystem {
 		public:
 			PhysicsSystem(GameWorld& g);
 			~PhysicsSystem();
@@ -32,6 +32,11 @@ namespace NCL {
 			void setPBonus(bool b) { pBonusAdd = b; };
 			void setEbonus(bool b) { eBonusAdd = b; };
 
+			bool jump;
+			bool jumpforce;
+			bool slowfloorP;
+			bool slowfloorE;
+
 		protected:
 			void BasicCollisionDetection();
 			void BroadPhase();
@@ -47,7 +52,7 @@ namespace NCL {
 			void UpdateCollisionList();
 			void UpdateObjectAABBs();
 
-			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p) ;
+			void ImpulseResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p);
 
 			GameWorld& gameWorld;
 
@@ -59,14 +64,14 @@ namespace NCL {
 			std::set<CollisionDetection::CollisionInfo> allCollisions;
 			std::set <CollisionDetection::CollisionInfo> broadphaseCollisions; //store collision pair for broadphase. Using set ensures unique values - no duplicates. Checks collisions once per object
 
-			bool useBroadPhase		= true;
-			int numCollisionFrames	= 5;
+			bool useBroadPhase = true;
+			int numCollisionFrames = 5;
 
 			float linearDamping;
 
-			bool pBonusAdd = false;
-			bool eBonusAdd = false;
-			
+			bool pBonusAdd;
+			bool eBonusAdd;
+
 		};
 	}
 }

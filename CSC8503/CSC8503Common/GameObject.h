@@ -12,7 +12,7 @@ using std::vector;
 namespace NCL {
 	namespace CSC8503 {
 
-		class GameObject	{
+		class GameObject {
 		public:
 			GameObject(string name = "");
 			~GameObject();
@@ -69,7 +69,7 @@ namespace NCL {
 				//std::cout << "OnCollisionEnd event occured!\n";
 			}
 
-			bool GetBroadphaseAABB(Vector3&outsize) const;
+			bool GetBroadphaseAABB(Vector3& outsize) const;
 
 			void UpdateBroadphaseAABB();
 
@@ -81,23 +81,22 @@ namespace NCL {
 				return worldID;
 			}
 
-
 			virtual void Update(float dt); ////////////////////////////////
 
 
 		protected:
 			Transform			transform;
 
-			CollisionVolume*	boundingVolume;
-			PhysicsObject*		physicsObject;
-			RenderObject*		renderObject;
+			CollisionVolume* boundingVolume;
+			PhysicsObject* physicsObject;
+			RenderObject* renderObject;
 
 			bool	isActive;
 			int		worldID;
 			string	name;
 
 			Vector3 broadphaseAABB;
-
+			CollisionType collisionType;
 		};
 	}
 }

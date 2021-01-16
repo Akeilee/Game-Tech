@@ -12,8 +12,7 @@ using namespace NCL::Maths;
 
 namespace NCL {
 	namespace CSC8503 {
-		class Transform
-		{
+		class Transform {
 		public:
 			Transform();
 			~Transform();

@@ -6,9 +6,9 @@ x........xxxxxxxxx
 x........xxxxxxxxx
 x....xxxxxxxxxxxxx
 x........xxxxxxxxx
-xxxxxx...xxxxxxxxx
-x......xxxxxxxxxxx
-x..xxxxxxxxxxxxxxx
+xxxxxx......xxxxxx
+x..........xxxxxxx
+x.........xxxxxxxx
 x................x
 x................x
 x................x

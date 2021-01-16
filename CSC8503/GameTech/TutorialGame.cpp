@@ -6,19 +6,23 @@
 #include "../../Common/TextureLoader.h"
 
 #include "../CSC8503Common/NavigationGrid.h"
+#include "../CSC8503Common/NavigationMesh.h"
+#include "../CSC8503Common/PushdownState.h"
+
 #include <iomanip>
 #include <sstream>
 #include <iostream>
 #include <vector>
 #include <string>
 
+
 using namespace NCL;
 using namespace CSC8503;
 
 
 
-float timer;
 bool displayPath = false;
+
 
 TutorialGame::TutorialGame() {
 	world = new GameWorld();
@@ -33,9 +37,64 @@ TutorialGame::TutorialGame() {
 	useGravity = false;
 	inSelectionMode = false;
 
+	playerScore = 1000;
+	enemyScore = 1000;
+	timer = 0;
+	loseGame = false;
+	winGame = false;
+	once = false;
+	movePlayer = false;
+	enemytimer = 0;
+	practiceMode = false;
+
 	Debug::SetRenderer(renderer);
 
 	InitialiseAssets();
+}
+
+
+
+void TutorialGame::LoseGame() {
+
+	if (playerScore <= 0 && once == false) {
+
+		world = new GameWorld();
+		renderer = new GameTechRenderer(*world);
+		loseGame = true;
+		once = true;
+		playerScore = 0;
+
+	}
+
+	if (once == true && loseGame == true) {
+		renderer->DrawString("YOU LOSE!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
+		renderer->DrawString("Your Score: " + std::to_string(playerScore), Vector2(10, 50), 40);
+		renderer->DrawString("Player 2 Score: " + std::to_string(enemyScore), Vector2(10, 60), 40);
+		renderer->DrawString("Esc to go back to main menu", Vector2(10, 80), 30);
+	}
+
+}
+
+void TutorialGame::WinGame() {
+
+	float offset = 20.0f;
+	if (player->GetTransform().GetPosition().x <= 100 + offset && player->GetTransform().GetPosition().x >= 100 - offset &&
+		player->GetTransform().GetPosition().z <= 100 + offset && player->GetTransform().GetPosition().z >= 100 - offset) {
+
+		if (playerScore > 0 && once == false) {
+			world = new GameWorld();
+			renderer = new GameTechRenderer(*world);
+			winGame = true;
+			once = true;
+		}
+
+		if (once == true && winGame == true) {
+			renderer->DrawString("YOU WIN!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
+			renderer->DrawString("Your Score: " + std::to_string(playerScore), Vector2(10, 50), 40);
+			renderer->DrawString("Player 2 Score: " + std::to_string(enemyScore), Vector2(10, 60), 40);
+			renderer->DrawString("Esc to go back to main menu", Vector2(10, 80), 30);
+		}
+	}
 }
 
 /*
@@ -51,6 +110,11 @@ void TutorialGame::InitialiseAssets() {
 		(*into)->SetPrimitiveType(GeometryPrimitive::Triangles);
 		(*into)->UploadToGPU();
 	};
+
+	//if (!practiceMode) {
+	useGravity = true;
+	physics->UseGravity(useGravity);
+	//}
 
 	loadFunc("cube.msh", &cubeMesh);
 	loadFunc("sphere.msh", &sphereMesh);
@@ -93,16 +157,22 @@ void TutorialGame::UpdateGame(float dt) {
 
 	UpdateKeys();
 
-	if (useGravity) {
-		Debug::Print("(G)ravity on", Vector2(5, 95));
-	}
-	else {
-		Debug::Print("(G)ravity off", Vector2(5, 95));
+	if (!winGame && !loseGame) {
+		if (useGravity) {
+			Debug::Print("(G)ravity on", Vector2(5, 95));
+		}
+		else {
+			Debug::Print("(G)ravity off", Vector2(5, 95));
+		}
 	}
 
+	if (practiceMode) {
+		playerScore = 999999;
+	}
 
 	TextOnScreen(dt);
-
+	LoseGame();
+	WinGame();
 
 	SelectObject();
 	MoveSelectedObject();
@@ -127,10 +197,33 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 
 
+	if (movePlayer == true) {
+		Vector3 objPos = player->GetTransform().GetPosition();
+		Vector3 camPos = objPos + Vector3(0, 14, 40); //higher z = farther back camera
+
+		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
+
+		Matrix4 modelMat = temp.Inverse();
+
+		Quaternion q(modelMat);
+		Vector3 angles = q.ToEuler();
+
+		world->GetMainCamera()->SetPosition(camPos);
+		world->GetMainCamera()->SetPitch(angles.x + 10);
+		world->GetMainCamera()->SetYaw(angles.y);
+	}
+
+
+
+
 	if (testStateObject) {
 		testStateObject->Update(dt);
 	}
-	test(dt);
+
+	if (!practiceMode) {
+		test(dt);
+	}
+
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -149,7 +242,7 @@ void TutorialGame::TextOnScreen(float dt) {
 	Debug::Print(time, Vector2(80, 6), 25, Vector4(1, 0.8, 0, 1));
 
 
-	if (decreaseScore >= 1) {
+	if (decreaseScore >= 1 && winGame == false && loseGame == false) {
 
 		playerScore -= 10;
 		enemyScore -= 10;
@@ -165,12 +258,14 @@ void TutorialGame::TextOnScreen(float dt) {
 	}
 
 	if (physics->getPBonus() == true) {
-		playerScore += 25;
 		physics->setPBonus(false);
+		playerScore += 25;
+		std::cout << "Player +25 score\n";
 	}
 	if (physics->getEBonus() == true) {
-		enemyScore += 25;
 		physics->setEbonus(false);
+		enemyScore += 25;
+		std::cout << "Enemy +25 score\n";
 	}
 
 
@@ -183,145 +278,161 @@ void TutorialGame::TextOnScreen(float dt) {
 }
 
 
-void TutorialGame::CollectBonus() {
+GameObject* TutorialGame::JumpPad() {
+	GameObject* jumpPad = new GameObject();
 
+	Vector3 dimensions = Vector3(5, 2, 5);
+	AABBVolume* volume = new AABBVolume(dimensions);
+
+	jumpPad->SetBoundingVolume((CollisionVolume*)volume);
+
+	jumpPad->GetTransform()
+		.SetPosition(Vector3(20, 0, 20))
+		.SetScale(dimensions * 2);
+
+	jumpPad->SetName("jumppad");
+
+	jumpPad->SetRenderObject(new RenderObject(&jumpPad->GetTransform(), cubeMesh, basicTex, basicShader));
+	jumpPad->SetPhysicsObject(new PhysicsObject(&jumpPad->GetTransform(), jumpPad->GetBoundingVolume()));
+
+	jumpPad->GetPhysicsObject()->SetInverseMass(0);
+	/////
+	jumpPad->GetPhysicsObject()->SetCRes(1.0f);  //higher number more elastic
+	jumpPad->GetPhysicsObject()->InitCubeInertia();
+
+	jumpPad->GetPhysicsObject()->SetCollisonType(CollisionType::JUMPPAD);
+
+	world->AddGameObject(jumpPad);
+
+	return jumpPad;
+}
+
+GameObject* TutorialGame::SlowFloor() {
+	GameObject* slowfloor = new GameObject();
+
+	Vector3 dimensions = Vector3(30, 0.01, 10);
+	AABBVolume* volume = new AABBVolume(dimensions);
+
+	slowfloor->SetBoundingVolume((CollisionVolume*)volume);
+
+	slowfloor->GetTransform()
+		.SetPosition(Vector3(60, 0, 60))
+		.SetScale(dimensions * 2);
+
+	slowfloor->SetName("slowfloor");
+
+	slowfloor->SetRenderObject(new RenderObject(&slowfloor->GetTransform(), cubeMesh, basicTex, basicShader));
+	slowfloor->SetPhysicsObject(new PhysicsObject(&slowfloor->GetTransform(), slowfloor->GetBoundingVolume()));
+
+	slowfloor->GetPhysicsObject()->SetInverseMass(0);
+	/////
+	slowfloor->GetPhysicsObject()->SetCRes(1.0f);  //higher number more elastic
+	slowfloor->GetPhysicsObject()->InitCubeInertia();
+
+	slowfloor->GetPhysicsObject()->SetCollisonType(CollisionType::JUMPPAD);
+
+	world->AddGameObject(slowfloor);
+
+	return slowfloor;
 }
 
 
 void TutorialGame::test(float dt) {
-	//std::cout << "first " << testNodeCopy.back().x << ",";
-	//std::cout << testNodeCopy.back().z << "\n";
-	//std::cout << testNodeCopy.end()[-2].x;
-	//std::cout << testNodeCopy.end()[-2].z << "\n";
-
-	//Vector3 direction = character->GetTransform().GetPosition() - testNodeCopy.back();
-
-	////if (character->GetTransform().GetPosition().x <= testNodeCopy.back().x && character->GetTransform().GetPosition().z == testNodeCopy.back().z) {
-	////	testNodeCopy.pop_back();
-	////}
-	////if (character->GetTransform().GetPosition().x >= testNodeCopy.back().x && character->GetTransform().GetPosition().z == testNodeCopy.back().z) {
-	////	testNodeCopy.pop_back();
-	////}
-	////if (character->GetTransform().GetPosition().x == testNodeCopy.back().x && character->GetTransform().GetPosition().z >= testNodeCopy.back().z) {
-	////	testNodeCopy.pop_back();
-	////}
-	////if (character->GetTransform().GetPosition().x == testNodeCopy.back().x && character->GetTransform().GetPosition().z <= testNodeCopy.back().z) {
-	////	testNodeCopy.pop_back();
-	////}
-
-
-	//timer += dt; 
-
-	//if (timer > 1 && testNodeCopy.size() >2) {
-	//	testNodeCopy.pop_back();
-	//	timer = 0;
-	//}
-
-	//if (testNodeCopy.end()[-2].x < testNodeCopy.back().x) {
-
-
-	//	OppositeForce();
-	//	character->GetPhysicsObject()->ClearForces();
-	//	character->GetPhysicsObject()->AddTorque({ 0,2,0 });
-	//	character->GetPhysicsObject()->AddForce({ -8,0,0 });
-
-	//	tempforce = { -5,0,0 };
-	//}
-
-	//else if (testNodeCopy.end()[-2].x > testNodeCopy.back().x) {
-
-
-	//	OppositeForce();
-	//	character->GetPhysicsObject()->ClearForces();
-	//	character->GetPhysicsObject()->AddTorque({ 0,-2,0 });
-	//	character->GetPhysicsObject()->AddForce({ 8, 0, 0 });
-
-	//	tempforce = { 5, 0, 0 };
-	//}
-
-	//else if (testNodeCopy.end()[-2].z < testNodeCopy.back().z) {
-	//	OppositeForce();
-	//	character->GetPhysicsObject()->ClearForces();
-	//	character->GetPhysicsObject()->AddTorque({ 0,-2,0 });
-	//	character->GetPhysicsObject()->AddForce({ 0, 0, -8 });
-
-	//	tempforce = { 0, 0, -5 };
-	//}
-	//else if (testNodeCopy.end()[-2].z > testNodeCopy.back().z) {
-	//	OppositeForce();
-	//	character->GetPhysicsObject()->ClearForces();
-	//	character->GetPhysicsObject()->AddTorque({ 0,2,0 });
-	//	character->GetPhysicsObject()->AddForce({ 0, 0, 8 });
-
-	//	tempforce = { 0, 0, 5 };
-	//}
-
-
-
-
-	float offset = 4;
+	enemytimer += dt;
+	float offset = 8;
 	Vector3 enemyPos = enemy->GetTransform().GetPosition();
+	float force = 10; 
 
+	if (physics->slowfloorE == true) {
+		force = 5;
+	}
 
-	if (enemyPos.x < testNodeCopy.back().x + offset && enemyPos.x > testNodeCopy.back().x - offset &&
-		enemyPos.z < testNodeCopy.back().z + offset && enemyPos.z > testNodeCopy.back().z - offset) {
+	//if position is at end then break
 
-		enemyPos.y = 0;
-
-		if (testNodeCopy.size() >= 2) {
-			testNodeCopy.pop_back();
-		}
-
-
-		NavigationPath path;
-		NavigationGrid grid("TestGrid1.txt");
-		bool found = grid.FindPath(enemyPos, Vector3(160, 0, 160), path);
-
-		//DisplayPathfinding();
-
+	//going for coin
+	float coinDistance = 10;
+	if (enemyPos.x - coinDistance <= apple->GetTransform().GetPosition().x && enemyPos.x + coinDistance >= apple->GetTransform().GetPosition().x &&
+		enemyPos.z - coinDistance <= apple->GetTransform().GetPosition().z && enemyPos.z + coinDistance >= apple->GetTransform().GetPosition().z) {
+		Vector3 direction = apple->GetTransform().GetPosition() - enemyPos;
+		direction.Normalise();
+		enemy->GetPhysicsObject()->AddForce(direction * force);
 	}
 
 
-	Vector3 direction = testNodeCopy.back() - enemyPos;
-	direction.Normalise();
-	enemy->GetPhysicsObject()->AddForce(direction * 10.0f);
+	else {
+		if (enemyPos.x < testNodes.back().x + offset && enemyPos.x > testNodes.back().x - offset &&
+			enemyPos.z < testNodes.back().z + offset && enemyPos.z > testNodes.back().z - offset && enemytimer < 5) {
+			enemyPos.y = 0;
+
+			if (testNodes.size() >= 2) {
+				testNodes.pop_back();
+			}
+			enemytimer = 0;
+		}
+
+		if (enemytimer >= 5) { //recalculate path
+			testNodes.clear();
+			Vector3 tempPos = Vector3(enemyPos.x + 80, enemyPos.y, enemyPos.z + 80);
+			NavigationPath path;
+			NavigationGrid grid("TestGrid1.txt");
+			bool found = grid.FindPath(Vector3(80, 0, 10), tempPos, path);
+
+			Vector3 pos;
+			while (path.PopWaypoint(pos)) {
+				testNodes.push_back(pos);
+			}
+
+			if (!found || enemytimer > 10) {
+				testNodes.clear();
+				std::cout << "Stuck, teleporting near player!\n";
+				enemy->GetTransform().SetPosition(player->GetTransform().GetPosition());
+				tempPos = Vector3(enemy->GetTransform().GetPosition().x + 80, enemy->GetTransform().GetPosition().y, enemy->GetTransform().GetPosition().z + 80);
+				found = grid.FindPath(Vector3(80, 0, 10), tempPos, path);
+
+				while (path.PopWaypoint(pos)) {
+					testNodes.push_back(pos);
+				}
+
+			}
+
+			if (found) {
+				std::cout << "Recalculating Path\n";
+				//DisplayPathfinding();
+			}
 
 
+			enemytimer = 0;
+		}
 
+			Vector3 direction = testNodes.back() - enemyPos;
+			direction.Normalise();
+			enemy->GetPhysicsObject()->AddForce(direction * force);
+		
+
+	}
 }
 
 
 void TutorialGame::OppositeForce() {
 
-	//if (tempforce.x > 0) {
-	//	character->GetPhysicsObject()->AddForce({ -16,0,0 });
 
-	//}
-	//else if (tempforce.x < 0) {
-	//	character->GetPhysicsObject()->AddForce({ 16,0,0 });
-
-	//}
-	//else if (tempforce.z > 0) {
-	//	character->GetPhysicsObject()->AddForce({ 0,0,-16 });
-
-	//}
-	//else if (tempforce.z < 0) {
-	//	character->GetPhysicsObject()->AddForce({ 0,0, 16 });
-	//}
-	//else if (tempforce.x == 0 && tempforce.z == 0) {
-	//	character->GetPhysicsObject()->AddForce({ 0,0,0 });
-	//}
 }
+
 
 
 
 void TutorialGame::UpdateKeys() {
 
-
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
+		playerScore = 1000;
+		enemyScore = 1000;
+		timer = 0;
+		loseGame = false;
+		winGame = false;
+		once = false;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -362,10 +473,21 @@ void TutorialGame::UpdateKeys() {
 	/// <summary>
 	/// //////////////////////////
 	/// </summary>
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD0)) {
-		selectionObject = player;
-		inSelectionMode = true;
+		
+	if (!practiceMode) {
+		movePlayer = true;
 	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUMPAD0)) {
+		movePlayer = !movePlayer;
+		selectionObject = false;
+		lockedObject = false;
+	}
+	if (movePlayer == true) {
+		MovePlayer();
+	}
+
+
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM0)) {
 		displayPath = !displayPath;
@@ -375,52 +497,62 @@ void TutorialGame::UpdateKeys() {
 	}
 }
 
+
 void TutorialGame::LockedObjectMovement() {
-	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
-	Matrix4 camWorld = view.Inverse();
+	if (lockedObject->GetName() != "player") {
 
-	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
+		lockedObject->GetPhysicsObject()->ClearForces();
 
-	//forward is more tricky -  camera forward is 'into' the screen...
-	//so we can take a guess, and use the cross of straight up, and
-	//the right axis, to hopefully get a vector that's good enough!
+		Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
+		Matrix4 camWorld = view.Inverse();
 
-	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
-	fwdAxis.y = 0.0f;
-	fwdAxis.Normalise();
+		Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
 
-	Vector3 charForward = lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-	Vector3 charForward2 = lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+		//forward is more tricky -  camera forward is 'into' the screen...
+		//so we can take a guess, and use the cross of straight up, and
+		//the right axis, to hopefully get a vector that's good enough!
 
-	float force = 100.0f;
+		Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
+		fwdAxis.y = 0.0f;
+		fwdAxis.Normalise();
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
-		lockedObject->GetPhysicsObject()->AddForce(-rightAxis * force);
+		Vector3 charForward = lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+		Vector3 charForward2 = lockedObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+
+		float force = 100.0f;
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+			lockedObject->GetPhysicsObject()->AddForce(-rightAxis * force);
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+			Vector3 worldPos = selectionObject->GetTransform().GetPosition();
+			lockedObject->GetPhysicsObject()->AddForce(rightAxis * force);
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+			lockedObject->GetPhysicsObject()->AddForce(fwdAxis * force);
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
+			lockedObject->GetPhysicsObject()->AddForce(-fwdAxis * force);
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM9)) {
+			lockedObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
+		}
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		Vector3 worldPos = selectionObject->GetTransform().GetPosition();
-		lockedObject->GetPhysicsObject()->AddForce(rightAxis * force);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		lockedObject->GetPhysicsObject()->AddForce(fwdAxis * force);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-		lockedObject->GetPhysicsObject()->AddForce(-fwdAxis * force);
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM9)) {
-		lockedObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
-	}
 }
 
 void TutorialGame::DebugObjectMovement() {
 	//If we've selected an object, we can manipulate it with some key presses
-	if (inSelectionMode && selectionObject) {
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		Debug::DrawLine(Vector3(0, 10, 0), Vector3(0, 10, 0.3f * 3), Vector4(1, 0, 0, 1));
+	if (inSelectionMode && selectionObject && (selectionObject->GetName() != "player")) {
+
+		selectionObject->GetPhysicsObject()->ClearForces();
+
+		//Debug::DrawLine(Vector3(0, 10, 0), Vector3(0, 10, 0.3f * 3), Vector4(1, 0, 0, 1));  //line from initial camera pos to object
+
 		//Twist the selected object!
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
@@ -457,6 +589,66 @@ void TutorialGame::DebugObjectMovement() {
 
 }
 
+void TutorialGame::MovePlayer() {
+
+	player->GetPhysicsObject()->ClearForces();
+	//movement
+	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
+	Matrix4 camWorld = view.Inverse();
+
+	Vector3 rightAxis = Vector3(camWorld.GetColumn(0));
+	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
+	fwdAxis.y = 0.0f;
+	fwdAxis.Normalise();
+
+	Vector3 charForward = player->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+
+	float force = 200;
+
+	if (physics->slowfloorP == true) {
+		force = 50.0f;
+	}
+
+
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
+		player->GetPhysicsObject()->AddForce(-rightAxis * force);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
+		player->GetPhysicsObject()->AddForce(rightAxis * force);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
+		player->GetPhysicsObject()->AddForce(fwdAxis * force);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
+		player->GetPhysicsObject()->AddForce(-fwdAxis * force);
+	}
+
+
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::SPACE) && physics->jump == true) {
+
+		player->GetPhysicsObject()->AddForce(Vector3(0, 60 * force, 0));
+		physics->jump = false;
+	}
+	if (player->GetPhysicsObject()->GetForce().y > force) { //pulling player down faster
+		player->GetPhysicsObject()->AddForce(Vector3(0, -9.8 * force, 0));
+	}
+
+	if (physics->jumpforce == true) { //jumping on jumppad
+		player->GetPhysicsObject()->AddForce(Vector3(0, force * 200, 0));
+		physics->jumpforce = false;
+	}
+
+
+
+}
+
+
+
 void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetNearPlane(0.1f);
 	world->GetMainCamera()->SetFarPlane(500.0f);
@@ -470,6 +662,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
+
 	//BridgeConstraintTest();
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
@@ -479,10 +672,13 @@ void TutorialGame::InitWorld() {
 
 	TestPathfinding();
 	//DisplayPathfinding();
-	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
+	testStateObject = AddStateObjectToWorld(Vector3(30, 0, 0));
 
 
-	enemy->GetTransform().SetPosition(testNodeCopy.back());
+	enemy->GetTransform().SetPosition(Vector3(testNodeCopy.back().x, 0, testNodeCopy.back().z));
+
+	JumpPad();
+	SlowFloor();
 }
 
 //tut 8 Constraints and solvers
@@ -533,8 +729,13 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
+	floor->GetRenderObject()->SetColour(Vector4(1, 0.71, 0.96, 1));
+	floor->GetRenderObject()->SetOriColour(Vector4(1, 0.71, 0.96, 1));
+
 	floor->GetPhysicsObject()->SetInverseMass(0);
 	floor->GetPhysicsObject()->InitCubeInertia();
+
+	floor->GetPhysicsObject()->SetCollisonType(CollisionType::FLOOR);
 
 	world->AddGameObject(floor);
 
@@ -658,6 +859,8 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 		}
 	}
 
+
+	AddSphereToWorld(Vector3(160, 3, 160), 2);
 }
 
 void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims) {
@@ -674,15 +877,15 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
-	AddEnemyToWorld(Vector3(5, 5, 0));
+	AddPlayerToWorld(Vector3(0, 0.02, 0));
+	AddEnemyToWorld(Vector3(5, 0.02, 0));
 	AddBonusToWorld(Vector3(10, 5, 0));
 	AddBonusToWorld(Vector3(20, 5, 0));
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
-	float inverseMass = 0.5f;
+	float inverseMass = 0.1f;
 
 	///////GameObject* character = new GameObject();
 	player = new GameObject();
@@ -711,6 +914,9 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
 	player->GetPhysicsObject()->InitSphereInertia();
+
+	player->GetPhysicsObject()->SetCRes(0.2);
+	player->GetPhysicsObject()->SetCollisonType(CollisionType::PLAYER);
 
 	world->AddGameObject(player);
 
@@ -742,13 +948,17 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	enemy->GetPhysicsObject()->SetInverseMass(inverseMass);
 	enemy->GetPhysicsObject()->InitSphereInertia();
 
+	enemy->GetPhysicsObject()->SetCRes(0.2);
+	enemy->GetPhysicsObject()->SetCollisonType(CollisionType::ENEMY);
+
 	world->AddGameObject(enemy);
 
 	return enemy;
 }
 
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
-	GameObject* apple = new GameObject();
+	//GameObject* apple = new GameObject();
+	apple = new GameObject();
 
 	SphereVolume* volume = new SphereVolume(1.25f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
@@ -764,8 +974,10 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	apple->GetRenderObject()->SetColour(Vector4(1, 0.85, 0, 1));
 	apple->GetRenderObject()->SetOriColour(Vector4(1, 0.85, 0, 1));
 
-	apple->GetPhysicsObject()->SetInverseMass(0.1f);
+	apple->GetPhysicsObject()->SetInverseMass(0.001f);
 	apple->GetPhysicsObject()->InitSphereInertia();
+
+	apple->GetPhysicsObject()->SetCollisonType(CollisionType::BONUS);
 
 	world->AddGameObject(apple);
 
@@ -774,28 +986,33 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 
 
 StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
-	StateGameObject* apple = new StateGameObject();
+	StateGameObject* movingCube = new StateGameObject();
 
-	SphereVolume* volume = new SphereVolume(1.25f);
-	apple->SetBoundingVolume((CollisionVolume*)volume);
-	apple->GetTransform()
-		.SetScale(Vector3(0.25, 0.25, 0.25))
-		.SetPosition(position);
+	AABBVolume* volume = new AABBVolume(Vector3(2.5, 2.5, 2.5));
+	movingCube->SetBoundingVolume((CollisionVolume*)volume);
+	movingCube->GetTransform()
+		.SetPosition(position)
+		.SetScale(Vector3(5, 5, 5));
 
-	apple->SetName("bonus");
 
-	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
-	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
+	movingCube->SetName("movingObject");
 
-	apple->GetRenderObject()->SetColour(Vector4(1, 0.85, 0, 1));
-	apple->GetRenderObject()->SetOriColour(Vector4(1, 0.85, 0, 1));
+	movingCube->SetRenderObject(new RenderObject(&movingCube->GetTransform(), cubeMesh, nullptr, basicShader));
+	movingCube->SetPhysicsObject(new PhysicsObject(&movingCube->GetTransform(), movingCube->GetBoundingVolume()));
 
-	apple->GetPhysicsObject()->SetInverseMass(0.1f);
-	apple->GetPhysicsObject()->InitSphereInertia();
+	movingCube->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+	movingCube->GetRenderObject()->SetOriColour(Vector4(1, 1, 0, 1));
 
-	world->AddGameObject(apple);
+	movingCube->GetPhysicsObject()->SetInverseMass(0.01f);
+	movingCube->GetPhysicsObject()->InitSphereInertia();
+	movingCube->GetPhysicsObject()->SetCRes(0.0f);
 
-	return apple;
+	movingCube->GetPhysicsObject()->SetCollisonType(CollisionType::MOVINGOBJECT);
+
+	world->AddGameObject(movingCube);
+
+	return movingCube;
+
 }
 
 
@@ -818,7 +1035,9 @@ bool TutorialGame::SelectObject() {
 		}
 	}
 	if (inSelectionMode) {
-		renderer->DrawString("Press Q to change to camera mode!", Vector2(5, 85));
+		if (!winGame && !loseGame) {
+			renderer->DrawString("Press Q to change to camera mode!", Vector2(5, 85));
+		}
 
 		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
 
@@ -850,14 +1069,17 @@ bool TutorialGame::SelectObject() {
 		}
 	}
 	else {
-		renderer->DrawString("Press Q to change to select mode!", Vector2(5, 85));
+		if (!winGame && !loseGame) {
+			renderer->DrawString("Press Q to change to select mode!", Vector2(5, 85));
+		}
 	}
 
-	if (lockedObject) {
+	if (lockedObject && !loseGame && !winGame) {
 		renderer->DrawString("Press L to unlock object!", Vector2(5, 80));
+		PrintDebugInfo();
 	}
 
-	else if (selectionObject) {
+	else if (selectionObject && !loseGame && !winGame) {
 
 		renderer->DrawString("Press L to lock selected object object!", Vector2(5, 80));
 
@@ -881,34 +1103,13 @@ bool TutorialGame::SelectObject() {
 		float screenX = 0 + 100 * (objectPos.x + 1) / 2;
 		float screenY = 0 + 100 * (objectPos.y + 1) / 2;
 
-		if (selectionObject->GetName() != "player") {
-			Debug::Print(selectionObject->GetName() + "(" + std::to_string(selectionObject->GetWorldID()) + ")", Vector2(screenX - 5, 100 - (screenY)+2), 20, Debug::CYAN);
-		}
 
-		string debugInfos[8];
+		//debug info
+		//if (selectionObject->GetName() != "player") {
+		Debug::Print(selectionObject->GetName() + "(" + std::to_string(selectionObject->GetWorldID()) + ")", Vector2(screenX - 5, 100 - (screenY)+2), 20, Debug::CYAN);
+		//}
+		PrintDebugInfo();
 
-		std::string nameInfo = "Name: " + selectionObject->GetName();
-		std::string posInfo = "Position: (" + std::to_string(selectionObject->GetTransform().GetPosition().x) + "," + std::to_string(selectionObject->GetTransform().GetPosition().y) + "," + std::to_string(selectionObject->GetTransform().GetPosition().z) + ')';
-		std::string oriInfo = "Orientation: (" + std::to_string(selectionObject->GetTransform().GetOrientation().x) + "," + std::to_string(selectionObject->GetTransform().GetOrientation().y) + "," + std::to_string(selectionObject->GetTransform().GetOrientation().z) + "," + std::to_string(selectionObject->GetTransform().GetOrientation().w) + ')';
-		std::string forceInfo = "Force: (" + std::to_string(selectionObject->GetPhysicsObject()->GetForce().x) + "," + std::to_string(selectionObject->GetPhysicsObject()->GetForce().y) + "," + std::to_string(selectionObject->GetPhysicsObject()->GetForce().z) + ')';
-		std::string massInfo = "Inverse Mass: " + std::to_string(selectionObject->GetPhysicsObject()->GetInverseMass());
-		std::string aiStateInfo = "AI State: ";/////////////////////////////
-		std::string worldIDInfo = "WorldID: " + std::to_string(selectionObject->GetWorldID());
-		std::string isActiveinfo = "IsActive: " + std::to_string(selectionObject->IsActive());
-		debugInfos[0] = nameInfo;
-		debugInfos[1] = posInfo;
-		debugInfos[2] = oriInfo;
-		debugInfos[3] = forceInfo;
-		debugInfos[4] = massInfo;
-		debugInfos[5] = aiStateInfo;
-		debugInfos[6] = worldIDInfo;
-		debugInfos[7] = isActiveinfo;
-
-		int a = 15;
-		for (int i = 0; i < 8; i++) {
-			a += 3;
-			Debug::Print(debugInfos[i], Vector2(2, a), 16);
-		}
 		/////////////////
 
 	}
@@ -930,6 +1131,38 @@ bool TutorialGame::SelectObject() {
 }
 
 
+void TutorialGame::PrintDebugInfo() {
+	string debugInfos[10];
+
+	std::string nameInfo = "Name: " + selectionObject->GetName();
+	std::string posInfo = "Position: (" + std::to_string(selectionObject->GetTransform().GetPosition().x) + "," + std::to_string(selectionObject->GetTransform().GetPosition().y) + "," + std::to_string(selectionObject->GetTransform().GetPosition().z) + ')';
+	std::string oriInfo = "Orientation: (" + std::to_string(selectionObject->GetTransform().GetOrientation().x) + "," + std::to_string(selectionObject->GetTransform().GetOrientation().y) + "," + std::to_string(selectionObject->GetTransform().GetOrientation().z) + "," + std::to_string(selectionObject->GetTransform().GetOrientation().w) + ')';
+	std::string forceInfo = "Force: (" + std::to_string(selectionObject->GetPhysicsObject()->GetForce().x) + "," + std::to_string(selectionObject->GetPhysicsObject()->GetForce().y) + "," + std::to_string(selectionObject->GetPhysicsObject()->GetForce().z) + ')';
+	std::string massInfo = "Inverse Mass: " + std::to_string(selectionObject->GetPhysicsObject()->GetInverseMass());
+	std::string cresInfo = "Coeff of Res: " + std::to_string(selectionObject->GetPhysicsObject()->GetCRes());
+	std::string aiStateInfo = "AI State: ";/////////////////////////////
+	std::string worldIDInfo = "WorldID: " + std::to_string(selectionObject->GetWorldID());
+	std::string colType = "CollisionType: " + selectionObject->GetPhysicsObject()->ToString(selectionObject->GetPhysicsObject()->GetCollisionType());
+	std::string isActiveinfo = "IsActive: " + std::to_string(selectionObject->IsActive());
+	debugInfos[0] = nameInfo;
+	debugInfos[1] = posInfo;
+	debugInfos[2] = oriInfo;
+	debugInfos[3] = forceInfo;
+	debugInfos[4] = massInfo;
+	debugInfos[5] = cresInfo;
+	debugInfos[6] = aiStateInfo;
+	debugInfos[7] = worldIDInfo;
+	debugInfos[8] = colType;
+	debugInfos[9] = isActiveinfo;
+
+	int a = 15;
+	for (int i = 0; i < 10; i++) {
+		a += 3;
+		Debug::Print(debugInfos[i], Vector2(2, a), 16);
+	}
+}
+
+
 /*
 If an object has been clicked, it can be pushed with the right mouse button, by an amount
 determined by the scroll wheel. In the first tutorial this won't do anything, as we haven't
@@ -937,7 +1170,11 @@ added linear motion into our physics system. After the second tutorial, objects 
 line - after the third, they'll be able to twist under torque aswell.
 */
 void TutorialGame::MoveSelectedObject() {
-	renderer->DrawString("Click Force :" + std::to_string(forceMagnitude), Vector2(35, 5)); // Draw debug text at 10 ,20
+
+	if (!winGame && !loseGame) {
+		renderer->DrawString("Click Force :" + std::to_string(forceMagnitude), Vector2(35, 5)); // Draw debug text at 10 ,20
+	}
+
 	forceMagnitude += Window::GetMouse()->GetWheelMovement() * 100.0f;
 
 	if (!selectionObject) {

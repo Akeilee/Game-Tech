@@ -142,20 +142,20 @@ bool CollisionDetection::RayCapsuleIntersection(const Ray& r, const Transform& w
 	upPos.Normalise();
 
 	OBBVolume* obbVol = new OBBVolume(Vector3(volume.GetRadius(), volume.GetHalfHeight(), volume.GetRadius()));
-	bool collided =  RayOBBIntersection(r, worldTransform, *obbVol , collision);
+	bool collided = RayOBBIntersection(r, worldTransform, *obbVol, collision);
 
 	if (collided) {
 		Vector3 topSpherePos = capsulePos + upPos * (volume.GetHalfHeight() - volume.GetRadius());
 		Vector3 botSpherePos = capsulePos - upPos * (volume.GetHalfHeight() - volume.GetRadius());
 
-		std::cout<<(collidedat - topSpherePos).Length() <<"\n";
+		std::cout << (collidedat - topSpherePos).Length() << "\n";
 		if ((collidedat.Normalised() - topSpherePos.Normalised()).Length() < volume.GetRadius()) {
-			
+
 			SphereVolume* sphVol = new SphereVolume(volume.GetRadius());
 			Transform t = worldTransform;
 			//std::cout << worldTransform.GetPosition();
-			t.SetPosition(Vector3(capsulePos.x, capsulePos.y + volume.GetHalfHeight()-volume.GetRadius(), capsulePos.z));			
-			return RaySphereIntersection(r, t,*sphVol, collision);
+			t.SetPosition(Vector3(capsulePos.x, capsulePos.y + volume.GetHalfHeight() - volume.GetRadius(), capsulePos.z));
+			return RaySphereIntersection(r, t, *sphVol, collision);
 		}
 
 		if ((collidedat - botSpherePos).Length() < volume.GetRadius()) {
@@ -167,7 +167,7 @@ bool CollisionDetection::RayCapsuleIntersection(const Ray& r, const Transform& w
 		}
 
 		else {
-			obbVol = new OBBVolume(Vector3(volume.GetRadius(), volume.GetHalfHeight()-volume.GetRadius(), volume.GetRadius()));
+			obbVol = new OBBVolume(Vector3(volume.GetRadius(), volume.GetHalfHeight() - volume.GetRadius(), volume.GetRadius()));
 			return RayOBBIntersection(r, worldTransform, *obbVol, collision);
 		}
 
@@ -552,14 +552,14 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 	return false;
 }
 
-bool CollisionDetection::OBBIntersection( const OBBVolume& volumeA, const Transform& worldTransformA,
-		const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
+	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 
 
 	return false;
 }
 
-bool CollisionDetection::SphereCapsuleIntersection( const CapsuleVolume& volumeA, const Transform& worldTransformA,
+bool CollisionDetection::SphereCapsuleIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 
 

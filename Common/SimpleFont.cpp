@@ -19,13 +19,12 @@ using namespace NCL;
 using namespace Rendering;
 using namespace Maths;
 
-SimpleFont::SimpleFont(const std::string&filename, const std::string&texName)
-{
-	startChar	= 0;
-	numChars	= 0;
-	allCharData	= nullptr;
+SimpleFont::SimpleFont(const std::string& filename, const std::string& texName) {
+	startChar = 0;
+	numChars = 0;
+	allCharData = nullptr;
 
-	texture		= TextureLoader::LoadAPITexture(texName);
+	texture = TextureLoader::LoadAPITexture(texName);
 
 	std::ifstream fontFile(Assets::FONTSSDIR + filename);
 
@@ -46,18 +45,17 @@ SimpleFont::SimpleFont(const std::string&filename, const std::string&texName)
 		fontFile >> allCharData[i].yOff;
 		fontFile >> allCharData[i].xAdvance;
 	}
-	texWidthRecip	= 1.0f / texWidth;
-	texHeightRecip	= 1.0f / texHeight;
+	texWidthRecip = 1.0f / texWidth;
+	texHeightRecip = 1.0f / texHeight;
 }
 
 
-SimpleFont::~SimpleFont()
-{
+SimpleFont::~SimpleFont() {
 	delete[]	allCharData;
 	delete		texture;
 }
 
-int SimpleFont::BuildVerticesForString(std::string &text, Vector2&startPos, Vector4&colour, float size, std::vector<Vector3>&positions, std::vector<Vector2>&texCoords, std::vector<Vector4>&colours) {
+int SimpleFont::BuildVerticesForString(std::string& text, Vector2& startPos, Vector4& colour, float size, std::vector<Vector3>& positions, std::vector<Vector2>& texCoords, std::vector<Vector4>& colours) {
 	int vertsWritten = 0;
 
 	int endChar = startChar + numChars;
@@ -82,13 +80,13 @@ int SimpleFont::BuildVerticesForString(std::string &text, Vector2&startPos, Vect
 		float scale = size;
 		//For basic vertex buffers, we're assuming we should add 6 vertices
 
-		float charWidth  = (float)((charData.x1 - charData.x0)/ texWidth) * (scale/1.8);///////////
+		float charWidth = (float)((charData.x1 - charData.x0) / texWidth) * (scale / 1.8);///////////
 		float charHeight = (float)(charData.y1 - charData.y0);
 
-		float xStart	= ((charData.xOff + currentX) * (texWidthRecip)) * (scale / 1.6);////////////////
-		float yStart	= startPos.y;
-		float yHeight	= (charHeight * texHeightRecip) * (scale*1.3);
-		float yOff		= ((charHeight + charData.yOff) * texHeightRecip) * scale;
+		float xStart = ((charData.xOff + currentX) * (texWidthRecip)) * (scale / 1.6);////////////////
+		float yStart = startPos.y;
+		float yHeight = (charHeight * texHeightRecip) * (scale * 1.3);
+		float yOff = ((charHeight + charData.yOff) * texHeightRecip) * scale;
 
 		positions.emplace_back(Vector3(startPos.x + xStart, yStart + yOff, 0));
 		positions.emplace_back(Vector3(startPos.x + xStart, yStart + yOff - yHeight, 0));

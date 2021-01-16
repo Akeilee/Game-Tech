@@ -14,13 +14,18 @@
 
 
 #include "../CSC8503Common/NavigationGrid.h"
+#include "../CSC8503Common/NavigationMesh.h"
 
 #include "TutorialGame.h"
 
 using namespace NCL;
 using namespace CSC8503;
 
+
+
 bool exitGame = false;
+bool practice;
+
 
 //tut 9
 void TestStateMachine() {
@@ -98,7 +103,7 @@ class PauseScreen : public PushdownState {
 
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {
 			std::cout << "Going back to game...\n";
-			return PushdownResult::Pop;	
+			return PushdownResult::Pop;
 		}
 		return PushdownResult::NoChange;
 
@@ -146,6 +151,14 @@ class GameScreen : public PushdownState {
 
 	void OnAwake(float dt) override {
 		std::cout << "Loading Game...\n";
+
+		if (practice == true) {
+			g->SetPracticeMode(true);
+		}
+		if (practice == false) {
+			g->SetPracticeMode(false);
+		}
+
 	}
 
 protected:
@@ -184,8 +197,8 @@ class IntroScreen : public PushdownState {
 		switch (counter) {
 		case 0:
 			renderer->DrawString("New Game", Vector2(40, 50), 30, Vector4(1, 0.9, 0, 1));
-			renderer->DrawString("Practice Mode", Vector2(40, 60),30);
-			renderer->DrawString("Exit", Vector2(40, 70),30);
+			renderer->DrawString("Practice Mode", Vector2(40, 60), 30);
+			renderer->DrawString("Exit", Vector2(40, 70), 30);
 			break;
 		case 1:
 			renderer->DrawString("New Game", Vector2(40, 50), 30);
@@ -198,13 +211,15 @@ class IntroScreen : public PushdownState {
 			renderer->DrawString("Exit", Vector2(40, 70), 30, Vector4(1, 1, 0, 1));
 			break;
 		}
-		
+
 
 		if ((Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN) && counter == 0)) {
+			practice = false;
 			*newState = new GameScreen();
 			return PushdownResult::Push;
 		}
 		if ((Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN) && counter == 1)) {
+			practice = true;
 			*newState = new GameScreen();
 			return PushdownResult::Push;
 		}
@@ -213,6 +228,7 @@ class IntroScreen : public PushdownState {
 			return PushdownResult::Pop;
 		}
 
+		
 		return PushdownResult::NoChange;
 	};
 
@@ -414,10 +430,9 @@ int main() {
 	//TestBehaviourTree(); /////////////////// find room, key, items, etc
 
 
-
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE) && exitGame!=true) {
+	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE) && exitGame != true) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 
 

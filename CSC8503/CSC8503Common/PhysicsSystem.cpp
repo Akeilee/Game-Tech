@@ -27,6 +27,12 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g) {
 	SetGravity(Vector3(0.0f, -9.8f, 0.0f));
 
 	linearDamping = 0.4f;
+	jump = false;
+	jumpforce = false;
+	pBonusAdd = false;
+	eBonusAdd = false;
+	slowfloorP = false;
+	slowfloorE = false;
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -240,23 +246,51 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 		return; // two static objects ??
 	}
 
+
+	//deleteing coin if collected
 	if (a.GetName() == "bonus" && b.GetName() == "player") {
 		pBonusAdd = true;
+		a.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 1000, 0));
 		a.SetIsActive(false);
+
 	}
 	else if (a.GetName() == "player" && b.GetName() == "bonus") {
 		pBonusAdd = true;
+		b.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 900, 0));
 		b.SetIsActive(false);
 	}
 	else if (a.GetName() == "bonus" && b.GetName() == "enemy") {
 		eBonusAdd = true;
+		a.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 1000, 0));
 		a.SetIsActive(false);
 	}
 	else if (a.GetName() == "enemy" && b.GetName() == "bonus") {
 		eBonusAdd = true;
+		b.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 900, 0));
 		b.SetIsActive(false);
 	}
 
+	//allowing jumps
+	if (a.GetName() == "player" && (b.GetName() == "floor") || b.GetName() == "player" && (a.GetName() == "floor")) { ///////////
+		jump = true;
+		slowfloorP = false;
+	}
+
+	if ((a.GetName() == "player" && b.GetName() == "jumppad" ) || (b.GetName() == "player" && a.GetName() == "jumppad")) {
+		jump = true;
+		jumpforce = true;
+	}
+
+	//slow floor
+	if (a.GetName() == "player" && (b.GetName() == "slowfloor") || b.GetName() == "player" && (a.GetName() == "slowfloor")) { 
+		slowfloorP = true;
+	}
+	if (a.GetName() == "enemy" && (b.GetName() == "slowfloor") || b.GetName() == "enemy" && (a.GetName() == "slowfloor")) {
+		slowfloorE = true;
+	}
+	if (a.GetName() == "enemy" && (b.GetName() == "floor") || b.GetName() == "enemy" && (a.GetName() == "floor")) {
+		slowfloorE = false;
+	}
 
 
 	// Separate them out using projection
@@ -284,6 +318,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	//working out impulse
 	float impulseForce = Vector3::Dot(contactVelocity, p.normal);
 
+
 	// now to work out the effect of inertia ....
 	Vector3 inertiaA = Vector3::Cross(physA->GetInertiaTensor() * Vector3::Cross(relativeA, p.normal), relativeA);
 	Vector3 inertiaB = Vector3::Cross(physB->GetInertiaTensor() * Vector3::Cross(relativeB, p.normal), relativeB);
@@ -302,7 +337,6 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 
 	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
 	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
-
 
 
 }
@@ -341,9 +375,21 @@ void PhysicsSystem::BroadPhase() {
 				info.a = min((*i).object, (*j).object);
 				info.b = max((*i).object, (*j).object);
 
-				if (info.a->GetName() == "floor" && info.b->GetName() == "floor") { //////////////////////////////////////////////////////////////////THIS WORKS
+
+				//ignore floor and floor collison, bonus/bonus collision
+				if (info.a->GetName() == "floor" && info.b->GetName() == "floor") { //////////////////////////////////////////////////////////////////
 					break;
 				}
+				if (info.a->GetName() == "floor" && info.b->GetName() == "jumppad" || info.b->GetName() == "floor" && info.a->GetName() == "jumppad") { 
+					break;
+				}
+				if (info.a->GetName() == "floor" && info.b->GetName() == "slowfloor" || info.b->GetName() == "floor" && info.a->GetName() == "slowfloor") { 
+					break;
+				}
+				if (info.a->GetName() == "bonus" && info.b->GetName() == "bonus") { 
+					break;
+				}
+
 
 				broadphaseCollisions.insert(info); //add potential collisions to set
 			}
@@ -363,6 +409,7 @@ void PhysicsSystem::NarrowPhase() {
 		if (CollisionDetection::ObjectIntersection(info.a, info.b, info)) {
 			info.framesLeft = numCollisionFrames;
 			ImpulseResolveCollision(*info.a, *info.b, info.point);
+
 			allCollisions.insert(info); // insert into our main set
 		}
 	}

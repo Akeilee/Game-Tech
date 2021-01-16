@@ -5,7 +5,7 @@
 class BehaviourNodeWithChildren : public BehaviourNode {
 
 public:
-	BehaviourNodeWithChildren(const std::string& nodeName) : BehaviourNode(nodeName) { };
+	BehaviourNodeWithChildren(const std::string& nodeName) : BehaviourNode(nodeName) {};
 
 	~BehaviourNodeWithChildren() {
 		for (auto& i : childNodes) {

@@ -2,13 +2,11 @@
 
 using namespace NCL::CSC8503;
 
-Transform::Transform()
-{
-	scale	= Vector3(1, 1, 1);
+Transform::Transform() {
+	scale = Vector3(1, 1, 1);
 }
 
-Transform::~Transform()
-{
+Transform::~Transform() {
 
 }
 

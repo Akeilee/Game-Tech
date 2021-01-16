@@ -5,7 +5,7 @@ class BehaviourSequence : public BehaviourNodeWithChildren {
 
 public:
 
-	BehaviourSequence(const std::string& nodeName): BehaviourNodeWithChildren(nodeName) { }
+	BehaviourSequence(const std::string& nodeName) : BehaviourNodeWithChildren(nodeName) {}
 	~BehaviourSequence() {}
 
 	BehaviourState Execute(float dt) override {

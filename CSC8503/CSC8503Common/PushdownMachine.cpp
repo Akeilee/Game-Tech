@@ -10,7 +10,8 @@ bool PushdownMachine::Update(float dt) {
 
 		switch (result) {
 
-		case PushdownState::Pop: {
+		case PushdownState::Pop:
+		{
 			activeState->OnSleep();
 			delete activeState;
 			stateStack.pop(); //state finished what it was doing
@@ -25,7 +26,8 @@ bool PushdownMachine::Update(float dt) {
 
 		}break;
 
-		case PushdownState::Push: {
+		case PushdownState::Push:
+		{
 			activeState->OnSleep();
 
 			stateStack.push(newState);

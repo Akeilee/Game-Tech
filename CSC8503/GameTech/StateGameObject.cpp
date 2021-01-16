@@ -28,13 +28,13 @@ StateGameObject::StateGameObject() {
 
 	stateMachine->AddTransition(new StateTransition(stateA, stateB, [&]() -> bool {
 		return //this->counter > 3.0f;
-		this->GetTransform().GetPosition().x < - 5;
+			this->GetTransform().GetPosition().x < -5;
 		}
 	));
 
 	stateMachine->AddTransition(new StateTransition(stateB, stateA, [&]() -> bool {
 		return //this->counter < 0.0f;
-			this->GetTransform().GetPosition().x >5;
+			this->GetTransform().GetPosition().x > 5;
 		}
 	));
 }
@@ -51,11 +51,11 @@ void StateGameObject::Update(float dt) {
 
 
 void StateGameObject::MoveLeft(float dt) {
-	GetPhysicsObject()->AddForce({ -10, 0, 0 });
+	GetPhysicsObject()->AddForce({ -100, 0, 0 });
 	counter += dt;
 }
 
 void StateGameObject::MoveRight(float dt) {
-	GetPhysicsObject()->AddForce({ 10, 0, 0 });
+	GetPhysicsObject()->AddForce({ 100, 0, 0 });
 	counter -= dt;
 }

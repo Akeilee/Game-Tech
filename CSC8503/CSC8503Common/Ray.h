@@ -5,27 +5,27 @@
 namespace NCL {
 	namespace Maths {
 		struct RayCollision {
-			void*		node;			//Node that was hit
+			void* node;			//Node that was hit
 			Vector3		collidedAt;		//WORLD SPACE position of the collision!
 			float		rayDistance;  //how far along the ray was the collision
 
 			RayCollision() {
-				node			= nullptr;
-				rayDistance		= FLT_MAX;   //// 0.0f??
+				node = nullptr;
+				rayDistance = FLT_MAX;   //// 0.0f??
 			}
 		};
 
 		class Ray {
 		public:
 			Ray(Vector3 position, Vector3 direction) {
-				this->position  = position;
+				this->position = position;
 				this->direction = direction;
 			}
 			~Ray(void) {}
 
-			Vector3 GetPosition() const {return position;	}
+			Vector3 GetPosition() const { return position; }
 
-			Vector3 GetDirection() const {return direction;	}
+			Vector3 GetDirection() const { return direction; }
 
 		protected:
 			Vector3 position;	//World space position

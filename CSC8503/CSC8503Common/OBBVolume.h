@@ -2,12 +2,11 @@
 #include "CollisionVolume.h"
 #include "../../Common/Vector3.h"
 namespace NCL {
-	class OBBVolume : CollisionVolume
-	{
+	class OBBVolume : CollisionVolume {
 	public:
 		OBBVolume(const Maths::Vector3& halfDims) {
-			type		= VolumeType::OBB;
-			halfSizes	= halfDims;
+			type = VolumeType::OBB;
+			halfSizes = halfDims;
 		}
 		~OBBVolume() {}
 

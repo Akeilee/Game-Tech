@@ -19,7 +19,7 @@ public:
 	virtual ~BehaviourNode() {}
 	virtual BehaviourState Execute(float dt) = 0; //returns latest behvaiourState
 
-	virtual void Reset() { currentState = BehaviourState::Initialise;}
+	virtual void Reset() { currentState = BehaviourState::Initialise; }
 
 
 protected:

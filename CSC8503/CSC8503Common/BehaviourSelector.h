@@ -5,7 +5,7 @@ class BehaviourSelector : public BehaviourNodeWithChildren {
 
 public:
 
-	BehaviourSelector(const std::string& nodeName) : BehaviourNodeWithChildren(nodeName) { }
+	BehaviourSelector(const std::string& nodeName) : BehaviourNodeWithChildren(nodeName) {}
 	~BehaviourSelector() {}
 
 	BehaviourState Execute(float dt) override {

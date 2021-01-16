@@ -2,15 +2,28 @@
 #include "../../Common/Vector3.h"
 #include "../../Common/Matrix3.h"
 
+#include <string>
+
 using namespace NCL::Maths;
 
 namespace NCL {
 	class CollisionVolume;
-	
+
+	enum class CollisionType {
+		FLOOR,
+		PLAYER,
+		ENEMY,
+		BONUS,
+		JUMPPAD,
+		MOVINGOBJECT,
+		NONE,
+	};
+
+
 	namespace CSC8503 {
 		class Transform;
 
-		class PhysicsObject	{
+		class PhysicsObject {
 		public:
 			PhysicsObject(Transform* parentTransform, const CollisionVolume* parentVolume);
 			~PhysicsObject();
@@ -39,7 +52,7 @@ namespace NCL {
 				return inverseMass;
 			}
 
-			/////////////////// tut 6
+			//tut 6 set bounciness
 			void SetCRes(float cRes) {
 				cRestitution = cRes;
 			}
@@ -48,12 +61,45 @@ namespace NCL {
 				return cRestitution;
 			}
 
+			void SetCollisonType(CollisionType ct) {
+				collisionType = ct;
+			}
+			CollisionType GetCollisionType()const {
+				return collisionType;
+			}
+
+			//printing enums
+			std::string ToString(CollisionType ct) const {
+				switch (ct) {
+				case CollisionType::FLOOR:
+					return "FLOOR";
+					break;
+				case CollisionType::PLAYER:
+					return "PLAYER";
+					break;
+				case CollisionType::ENEMY:
+					return "ENEMY";
+					break;
+				case CollisionType::BONUS:
+					return "BONUS";
+					break;
+				case CollisionType::JUMPPAD:
+					return "JUMPPAD";
+					break;
+				case CollisionType::MOVINGOBJECT:
+					return "MOVINGOBJECT";
+					break;
+				case CollisionType::NONE:
+					return "NONE";
+					break;
+				}
+			}
 
 
 
 			void ApplyAngularImpulse(const Vector3& force);
 			void ApplyLinearImpulse(const Vector3& force);
-			
+
 			void AddForce(const Vector3& force);
 
 			void AddForceAtPosition(const Vector3& force, const Vector3& position);
@@ -79,11 +125,11 @@ namespace NCL {
 			Matrix3 GetInertiaTensor() const {
 				return inverseInteriaTensor;
 			}
-			
+
 
 		protected:
 			const CollisionVolume* volume;
-			Transform*		transform;
+			Transform* transform;
 
 			float inverseMass;
 			float elasticity;
@@ -93,7 +139,7 @@ namespace NCL {
 			//linear stuff
 			Vector3 linearVelocity;
 			Vector3 force;
-			
+
 
 			//angular stuff
 			Vector3 angularVelocity;
@@ -101,6 +147,8 @@ namespace NCL {
 			Vector3 inverseInertia;
 			Matrix3 inverseInteriaTensor;
 
+
+			CollisionType collisionType;
 		};
 	}
 }

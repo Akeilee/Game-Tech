@@ -3,22 +3,22 @@
 
 using namespace NCL::CSC8503;
 
-GameObject::GameObject(string objectName)	{
-	name			= objectName;
-	worldID			= -1;
-	isActive		= true;
-	boundingVolume	= nullptr;
-	physicsObject	= nullptr;
-	renderObject	= nullptr;
+GameObject::GameObject(string objectName) {
+	name = objectName;
+	worldID = -1;
+	isActive = true;
+	boundingVolume = nullptr;
+	physicsObject = nullptr;
+	renderObject = nullptr;
 }
 
-GameObject::~GameObject()	{
+GameObject::~GameObject() {
 	delete boundingVolume;
 	delete physicsObject;
 	delete renderObject;
 }
 
-bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
+bool GameObject::GetBroadphaseAABB(Vector3& outSize) const {
 	if (!boundingVolume) {
 		return false;
 	}
@@ -46,5 +46,5 @@ void GameObject::UpdateBroadphaseAABB() {
 }
 
 void GameObject::Update(float dt) {
-	
+
 }

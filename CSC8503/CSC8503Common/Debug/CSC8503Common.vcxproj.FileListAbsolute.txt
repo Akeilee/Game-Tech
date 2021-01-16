@@ -1,2 +1,0 @@
-C:\Users\Akeina\Desktop\Coursework\Win32\Debug\CSC8503Common.pdb
-C:\Users\Akeina\Desktop\Coursework\CSC8503\CSC8503Common\Debug\CSC8503Common.pdb

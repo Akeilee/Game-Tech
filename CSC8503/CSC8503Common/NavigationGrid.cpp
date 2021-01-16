@@ -6,22 +6,22 @@
 using namespace NCL;
 using namespace CSC8503;
 
-const int LEFT_NODE		= 0;
-const int RIGHT_NODE	= 1;
-const int TOP_NODE		= 2;
-const int BOTTOM_NODE	= 3;
+const int LEFT_NODE = 0;
+const int RIGHT_NODE = 1;
+const int TOP_NODE = 2;
+const int BOTTOM_NODE = 3;
 
-const char WALL_NODE	= 'x';
-const char FLOOR_NODE	= '.';
+const char WALL_NODE = 'x';
+const char FLOOR_NODE = '.';
 
-NavigationGrid::NavigationGrid()	{
-	nodeSize	= 0;
-	gridWidth	= 0;
-	gridHeight	= 0;
-	allNodes	= nullptr;
+NavigationGrid::NavigationGrid() {
+	nodeSize = 0;
+	gridWidth = 0;
+	gridHeight = 0;
+	allNodes = nullptr;
 }
 
-NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() { //making grid maze file
+NavigationGrid::NavigationGrid(const std::string& filename) : NavigationGrid() { //making grid maze file
 	std::ifstream infile(Assets::DATADIR + filename);
 
 	infile >> nodeSize;
@@ -34,18 +34,18 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() { 
 
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
-			GridNode&n = allNodes[(gridWidth * y) + x];
+			GridNode& n = allNodes[(gridWidth * y) + x];
 			char type = 0;
 			infile >> type;
 			n.type = type;
-			n.position = Vector3((float)(x * nodeSize-80), 0, (float)(y * nodeSize-80)); /////////////////////////////
+			n.position = Vector3((float)(x * nodeSize - 80), 0, (float)(y * nodeSize - 80)); /////////////////////////////
 		}
 	}
-	
+
 	//now to build the connectivity between the nodes
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
-			GridNode&n = allNodes[(gridWidth * y) + x];		
+			GridNode& n = allNodes[(gridWidth * y) + x];
 
 			if (y > 0) { //get the above node
 				n.connected[0] = &allNodes[(gridWidth * (y - 1)) + x];
@@ -62,18 +62,18 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() { 
 			for (int i = 0; i < 4; ++i) {
 				if (n.connected[i]) {
 					if (n.connected[i]->type == '.') {
-						n.costs[i]		= 1;
+						n.costs[i] = 1;
 					}
 					if (n.connected[i]->type == 'x') {
 						n.connected[i] = nullptr; //actually a wall, disconnect!
 					}
 				}
 			}
-		}	
+		}
 	}
 }
 
-NavigationGrid::~NavigationGrid()	{
+NavigationGrid::~NavigationGrid() {
 	delete[] allNodes;
 }
 
@@ -98,7 +98,7 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 
 	//turning co-ordinates to index value
 	GridNode* startNode = &allNodes[(fromZ * gridWidth) + fromX];
-	GridNode* endNode	= &allNodes[(toZ * gridWidth) + toX];
+	GridNode* endNode = &allNodes[(toZ * gridWidth) + toX];
 
 	std::vector<GridNode*>  openList;
 	std::vector<GridNode*>  closedList;
@@ -129,17 +129,17 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 
 				if (!neighbour) { //might not be connected...
 					continue;
-				}	
-				bool inClosed	= NodeInList(neighbour, closedList); //is neighbour in closed list already?
+				}
+				bool inClosed = NodeInList(neighbour, closedList); //is neighbour in closed list already?
 				if (inClosed) {
 					continue; //already discarded this neighbour...
 				}
 
-				float h = Heuristic(neighbour, endNode);				
+				float h = Heuristic(neighbour, endNode);
 				float g = currentBestNode->g + currentBestNode->costs[i]; //costs[i] is cost of traversing node, eg terrain
 				float f = h + g;
 
-				bool inOpen		= NodeInList(neighbour, openList); //is neighbour in open list already?
+				bool inOpen = NodeInList(neighbour, openList); //is neighbour in open list already?
 
 				if (!inOpen) { //first time we've seen this neighbour
 					openList.emplace_back(neighbour);
@@ -163,15 +163,15 @@ bool NavigationGrid::NodeInList(GridNode* n, std::vector<GridNode*>& list) const
 	return i == list.end() ? false : true;
 }
 
-GridNode*  NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
+GridNode* NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
 	std::vector<GridNode*>::iterator bestI = list.begin();
 
 	GridNode* bestNode = *list.begin();
 
 	for (auto i = list.begin(); i != list.end(); ++i) {
 		if ((*i)->f < bestNode->f) {
-			bestNode	= (*i);
-			bestI		= i; //always the best node
+			bestNode = (*i);
+			bestI = i; //always the best node
 		}
 	}
 	list.erase(bestI);

@@ -28,21 +28,21 @@ namespace NCL {
 				type = 0;
 				parent = nullptr;
 			}
-			~GridNode() {	}
+			~GridNode() {}
 		};
 
 
-		class NavigationGrid : public NavigationMap	{
+		class NavigationGrid : public NavigationMap {
 		public:
 			NavigationGrid();
-			NavigationGrid(const std::string&filename);
+			NavigationGrid(const std::string& filename);
 			~NavigationGrid();
 
 			bool FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) override;
-				
+
 		protected:
 			bool		NodeInList(GridNode* n, std::vector<GridNode*>& list) const;
-			GridNode*	RemoveBestNode(std::vector<GridNode*>& list) const;
+			GridNode* RemoveBestNode(std::vector<GridNode*>& list) const;
 			float		Heuristic(GridNode* hNode, GridNode* endNode) const;
 			int nodeSize;
 			int gridWidth;

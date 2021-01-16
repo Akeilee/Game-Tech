@@ -1,36 +1,66 @@
-c:\users\akeina\desktop\coursework\common\x64\debug\common.pdb
-c:\users\akeina\desktop\coursework\common\x64\debug\common.idb
-c:\users\akeina\desktop\coursework\common\x64\debug\texturewriter.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\textureloader.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\texturebase.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\simplefont.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\shaderbase.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\rendererbase.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\quaternion.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\plane.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\mouse.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\meshmaterial.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\meshgeometry.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\meshanimation.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\matrix4.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\matrix3.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\matrix2.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\maths.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\keyboard.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\gametimer.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\camera.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\assets.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\window.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\win32window.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\win32mouse.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\win32keyboard.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\vector4.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\vector3.obj
-c:\users\akeina\desktop\coursework\common\x64\debug\vector2.obj
-c:\users\akeina\desktop\coursework\x64\debug\common.lib
-c:\users\akeina\desktop\coursework\common\x64\debug\common.tlog\cl.command.1.tlog
-c:\users\akeina\desktop\coursework\common\x64\debug\common.tlog\cl.read.1.tlog
-c:\users\akeina\desktop\coursework\common\x64\debug\common.tlog\cl.write.1.tlog
-c:\users\akeina\desktop\coursework\common\x64\debug\common.tlog\lib-link.read.1.tlog
-c:\users\akeina\desktop\coursework\common\x64\debug\common.tlog\lib-link.write.1.tlog
-c:\users\akeina\desktop\coursework\common\x64\debug\common.tlog\lib.command.1.tlog
+c:\users\akeina\desktop\tutorials\common\x64\debug\common.pdb
+c:\users\akeina\desktop\tutorials\common\x64\debug\common.idb
+c:\users\akeina\desktop\tutorials\common\x64\debug\texturewriter.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\textureloader.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\texturebase.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\simplefont.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\shaderbase.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\rendererbase.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\quaternion.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\plane.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\mouse.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\meshmaterial.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\meshgeometry.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\meshanimation.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\matrix4.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\matrix3.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\matrix2.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\maths.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\keyboard.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\gametimer.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\camera.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\assets.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\window.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\win32window.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\win32mouse.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\win32keyboard.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\vector4.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\vector3.obj
+c:\users\akeina\desktop\tutorials\common\x64\debug\vector2.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.pdb
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.idb
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\texturewriter.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\textureloader.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\texturebase.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\simplefont.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\shaderbase.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\rendererbase.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\quaternion.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\plane.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\mouse.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\meshmaterial.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\meshgeometry.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\meshanimation.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\matrix4.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\matrix3.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\matrix2.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\maths.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\keyboard.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\gametimer.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\camera.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\assets.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\window.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\win32window.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\win32mouse.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\win32keyboard.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\vector4.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\vector3.obj
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\vector2.obj
+c:\users\akeina\desktop\tutorials\x64\debug\common.lib
+c:\users\akeina\desktop\tutorials - copy\x64\debug\common.lib
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.tlog\cl.command.1.tlog
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.tlog\cl.read.1.tlog
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.tlog\cl.write.1.tlog
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.tlog\lib-link.read.1.tlog
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.tlog\lib-link.write.1.tlog
+c:\users\akeina\desktop\tutorials - copy\common\x64\debug\common.tlog\lib.command.1.tlog
