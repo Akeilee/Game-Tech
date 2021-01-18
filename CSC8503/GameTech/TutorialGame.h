@@ -6,6 +6,16 @@
 
 namespace NCL {
 	namespace CSC8503 {
+
+		enum class EnemyState {
+			MOVING,
+			ATTACK,
+			COLLECT,
+			BONUSBALL,
+			IDLE,
+		};
+
+
 		class TutorialGame {
 		public:
 			TutorialGame();
@@ -82,6 +92,8 @@ namespace NCL {
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
+			GameObject* AddbonusBall(const Vector3& position);
+
 			GameObject* player; /////
 			GameObject* enemy; /////
 
@@ -134,10 +146,11 @@ namespace NCL {
 			bool movePlayer;
 			float enemytimer;
 
-
 			GameObject* apple;
+			GameObject* bonusBall;
 			bool practiceMode;
 
+			EnemyState enemyState;
 			
 		};
 	}

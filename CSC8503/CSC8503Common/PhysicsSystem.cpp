@@ -33,6 +33,9 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g) {
 	eBonusAdd = false;
 	slowfloorP = false;
 	slowfloorE = false;
+	collectedBonusBall = false;
+	enemy1 = false;
+	player1 = false;
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -270,6 +273,11 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 		b.SetIsActive(false);
 	}
 
+	//drop bonusBall
+	if ((a.GetName() == "player" && b.GetName() == "enemy") || (b.GetName() == "player" && a.GetName() == "enemy")) {
+		collectedBonusBall = false;
+	}
+
 	//allowing jumps
 	if (a.GetName() == "player" && (b.GetName() == "floor") || b.GetName() == "player" && (a.GetName() == "floor")) { ///////////
 		jump = true;
@@ -293,6 +301,62 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	}
 
 
+	//springs for bonusBall coin
+	if (((a.GetName() == "player" && b.GetName() == "bonusBall") || (b.GetName() == "player" && a.GetName() == "bonusBall")) ||
+		((a.GetName() == "enemy" && b.GetName() == "bonusBall") || (b.GetName() == "enemy" && a.GetName() == "bonusBall"))) {
+
+		GameObject* player = &a;
+		GameObject* bonusBall = &b;
+		float k = 5;
+		float dampening = 10;
+
+		if (a.GetName() == "player" || b.GetName() == "player") {
+			player1 = true;
+			enemy1 = false;
+		}
+		if (a.GetName() == "enemy" || b.GetName() == "enemy") {
+			enemy1 = true;
+			player1 = false;
+		}
+
+
+		if (a.GetName() == "player" || a.GetName() == "enemy") {
+			*player = a;
+			*bonusBall = b;
+		}
+		else if (b.GetName() == "player" || b.GetName() == "enemy") {
+			*player = b;
+			*bonusBall = a;
+		}
+
+		if (collectedBonusBall == false) { //drop coin for other player to steal
+			bonusBall->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5, 0, 2));
+		}
+
+
+		Vector3 playerPos = player->GetTransform().GetPosition(); //anchor
+		Vector3 bonusBallPos = bonusBall->GetTransform().GetPosition();
+
+
+		Vector3 posDifference =  (bonusBallPos - playerPos);
+		Vector3 velDifference = (bonusBall->GetPhysicsObject()->GetAngularVelocity() - player->GetPhysicsObject()->GetAngularVelocity());
+
+
+		Vector3 springforce = (-(posDifference *k) - (velDifference*dampening)).Normalised();
+
+		b.GetTransform().SetPosition(playerPos + Vector3(0, -1, -1));
+		physB->SetLinearVelocity(springforce * b.GetPhysicsObject()->GetInverseMass());
+
+		//physA->ApplyLinearImpulse(-springforce);
+		physB->ApplyLinearImpulse(springforce);
+		
+		collectedBonusBall = true;
+
+	}
+
+
+	else {
+	
 	// Separate them out using projection
 	//pudh object along collision normal by amount of penetration distance and inv mass
 	transformA.SetPosition(transformA.GetPosition() - (p.normal * p.penetration * (physA->GetInverseMass() / totalMass))); //divide by total mass to find out mass proportion (heavy object move less away from each other)
@@ -337,7 +401,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 
 	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
 	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
-
+	}
 
 }
 
@@ -376,16 +440,11 @@ void PhysicsSystem::BroadPhase() {
 				info.b = max((*i).object, (*j).object);
 
 
-				//ignore floor and floor collison, bonus/bonus collision
-				if (info.a->GetName() == "floor" && info.b->GetName() == "floor") { //////////////////////////////////////////////////////////////////
+				//ignore static object collision
+				if (info.a->GetPhysicsObject()->GetState() == ObjectState::STATIC && info.b->GetPhysicsObject()->GetState() == ObjectState::STATIC) {
 					break;
 				}
-				if (info.a->GetName() == "floor" && info.b->GetName() == "jumppad" || info.b->GetName() == "floor" && info.a->GetName() == "jumppad") { 
-					break;
-				}
-				if (info.a->GetName() == "floor" && info.b->GetName() == "slowfloor" || info.b->GetName() == "floor" && info.a->GetName() == "slowfloor") { 
-					break;
-				}
+
 				if (info.a->GetName() == "bonus" && info.b->GetName() == "bonus") { 
 					break;
 				}

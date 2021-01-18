@@ -187,10 +187,10 @@ class IntroScreen : public PushdownState {
 			counter = 2;
 		}
 
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN)) {
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN)|| Window::GetKeyboard()->KeyPressed(KeyboardKeys::S)) {
 			counter++;
 		}
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP)) {
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP) || Window::GetKeyboard()->KeyPressed(KeyboardKeys::W)) {
 			counter--;
 		}
 

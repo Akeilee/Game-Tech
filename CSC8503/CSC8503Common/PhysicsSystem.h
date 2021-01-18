@@ -36,6 +36,9 @@ namespace NCL {
 			bool jumpforce;
 			bool slowfloorP;
 			bool slowfloorE;
+			bool collectedBonusBall;
+			bool enemy1;
+			bool player1;
 
 		protected:
 			void BasicCollisionDetection();

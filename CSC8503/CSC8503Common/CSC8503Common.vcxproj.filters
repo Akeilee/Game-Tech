@@ -114,9 +114,6 @@
     <ClInclude Include="BehaviourAction.h">
       <Filter>AI</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWorld.cpp">

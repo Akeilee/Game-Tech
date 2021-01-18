@@ -47,6 +47,8 @@ TutorialGame::TutorialGame() {
 	enemytimer = 0;
 	practiceMode = false;
 
+	enemyState = EnemyState::IDLE;
+
 	Debug::SetRenderer(renderer);
 
 	InitialiseAssets();
@@ -64,7 +66,13 @@ void TutorialGame::LoseGame() {
 		once = true;
 		playerScore = 0;
 
+		if (physics->enemy1 == true && physics->collectedBonusBall == true) {
+			enemyScore += 1000;
+			std::cout << "Enemy gets bonus score of 1000\n";
+		}
 	}
+
+
 
 	if (once == true && loseGame == true) {
 		renderer->DrawString("YOU LOSE!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
@@ -86,7 +94,18 @@ void TutorialGame::WinGame() {
 			renderer = new GameTechRenderer(*world);
 			winGame = true;
 			once = true;
+
+			if (physics->player1 == true && physics->collectedBonusBall == true) {
+				playerScore += 1000;
+				std::cout << "Player gets bonus score of 1000\n";
+			}
+			if (physics->enemy1 == true && physics->collectedBonusBall == true) {
+				enemyScore += 1000;
+				std::cout << "Enemy gets bonus score of 1000\n";
+			}
 		}
+
+
 
 		if (once == true && winGame == true) {
 			renderer->DrawString("YOU WIN!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
@@ -151,6 +170,7 @@ TutorialGame::~TutorialGame() {
 }
 
 void TutorialGame::UpdateGame(float dt) {
+
 	if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}
@@ -301,6 +321,7 @@ GameObject* TutorialGame::JumpPad() {
 	jumpPad->GetPhysicsObject()->InitCubeInertia();
 
 	jumpPad->GetPhysicsObject()->SetCollisonType(CollisionType::JUMPPAD);
+	jumpPad->GetPhysicsObject()->SetState(ObjectState::STATIC);
 
 	world->AddGameObject(jumpPad);
 
@@ -330,6 +351,7 @@ GameObject* TutorialGame::SlowFloor() {
 	slowfloor->GetPhysicsObject()->InitCubeInertia();
 
 	slowfloor->GetPhysicsObject()->SetCollisonType(CollisionType::JUMPPAD);
+	slowfloor->GetPhysicsObject()->SetState(ObjectState::STATIC);
 
 	world->AddGameObject(slowfloor);
 
@@ -338,16 +360,15 @@ GameObject* TutorialGame::SlowFloor() {
 
 
 void TutorialGame::test(float dt) {
+
 	enemytimer += dt;
 	float offset = 8;
 	Vector3 enemyPos = enemy->GetTransform().GetPosition();
-	float force = 10; 
+	float force = 10;
 
 	if (physics->slowfloorE == true) {
 		force = 5;
 	}
-
-	//if position is at end then break
 
 	//going for coin
 	float coinDistance = 10;
@@ -356,6 +377,18 @@ void TutorialGame::test(float dt) {
 		Vector3 direction = apple->GetTransform().GetPosition() - enemyPos;
 		direction.Normalise();
 		enemy->GetPhysicsObject()->AddForce(direction * force);
+		//std::cout << "Going after coin\n";
+	}
+
+
+	//going for bonusBall
+	coinDistance = 15;
+	if (physics->enemy1 == false && (enemyPos.x - coinDistance <= bonusBall->GetTransform().GetPosition().x && enemyPos.x + coinDistance >= bonusBall->GetTransform().GetPosition().x &&
+		enemyPos.z - coinDistance <= bonusBall->GetTransform().GetPosition().z && enemyPos.z + coinDistance >= bonusBall->GetTransform().GetPosition().z)) {
+		Vector3 direction = bonusBall->GetTransform().GetPosition() - enemyPos;
+		direction.Normalise();
+		enemy->GetPhysicsObject()->AddForce(direction * force);
+		//std::cout << "Going after bonusBall\n";
 	}
 
 
@@ -385,7 +418,7 @@ void TutorialGame::test(float dt) {
 			if (!found || enemytimer > 10) {
 				testNodes.clear();
 				std::cout << "Stuck, teleporting near player!\n";
-				enemy->GetTransform().SetPosition(player->GetTransform().GetPosition());
+				enemy->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5,0,5));
 				tempPos = Vector3(enemy->GetTransform().GetPosition().x + 80, enemy->GetTransform().GetPosition().y, enemy->GetTransform().GetPosition().z + 80);
 				found = grid.FindPath(Vector3(80, 0, 10), tempPos, path);
 
@@ -404,12 +437,14 @@ void TutorialGame::test(float dt) {
 			enemytimer = 0;
 		}
 
-			Vector3 direction = testNodes.back() - enemyPos;
-			direction.Normalise();
-			enemy->GetPhysicsObject()->AddForce(direction * force);
-		
+		Vector3 direction = testNodes.back() - enemyPos;
+		direction.Normalise();
+		enemy->GetPhysicsObject()->AddForce(direction * force);
+
 
 	}
+
+
 }
 
 
@@ -609,8 +644,6 @@ void TutorialGame::MovePlayer() {
 		force = 50.0f;
 	}
 
-
-
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
 		player->GetPhysicsObject()->AddForce(-rightAxis * force);
 	}
@@ -736,6 +769,8 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->GetPhysicsObject()->InitCubeInertia();
 
 	floor->GetPhysicsObject()->SetCollisonType(CollisionType::FLOOR);
+	floor->GetPhysicsObject()->SetState(ObjectState::STATIC);
+
 
 	world->AddGameObject(floor);
 
@@ -881,6 +916,7 @@ void TutorialGame::InitGameExamples() {
 	AddEnemyToWorld(Vector3(5, 0.02, 0));
 	AddBonusToWorld(Vector3(10, 5, 0));
 	AddBonusToWorld(Vector3(20, 5, 0));
+	AddbonusBall(Vector3(50, 15, 50));
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -917,6 +953,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	player->GetPhysicsObject()->SetCRes(0.2);
 	player->GetPhysicsObject()->SetCollisonType(CollisionType::PLAYER);
+	player->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
 	world->AddGameObject(player);
 
@@ -950,6 +987,7 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 
 	enemy->GetPhysicsObject()->SetCRes(0.2);
 	enemy->GetPhysicsObject()->SetCollisonType(CollisionType::ENEMY);
+	enemy->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
 	world->AddGameObject(enemy);
 
@@ -978,10 +1016,41 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	apple->GetPhysicsObject()->InitSphereInertia();
 
 	apple->GetPhysicsObject()->SetCollisonType(CollisionType::BONUS);
+	apple->GetPhysicsObject()->SetState(ObjectState::STATIC);
 
 	world->AddGameObject(apple);
 
 	return apple;
+}
+
+GameObject* TutorialGame::AddbonusBall(const Vector3& position) {
+	//GameObject* apple = new GameObject();
+	bonusBall = new GameObject();
+
+	SphereVolume* volume = new SphereVolume(1.25f);
+	bonusBall->SetBoundingVolume((CollisionVolume*)volume);
+	bonusBall->GetTransform()
+		.SetScale(Vector3(0.25, 0.25, 0.25))
+		.SetPosition(position);
+
+	bonusBall->SetName("bonusBall");
+
+	bonusBall->SetRenderObject(new RenderObject(&bonusBall->GetTransform(), bonusMesh, nullptr, basicShader));
+	bonusBall->SetPhysicsObject(new PhysicsObject(&bonusBall->GetTransform(), bonusBall->GetBoundingVolume()));
+
+	bonusBall->GetRenderObject()->SetColour(Vector4(1, 0.85, 1, 1));
+	bonusBall->GetRenderObject()->SetOriColour(Vector4(1, 0.85, 1, 1));
+
+	bonusBall->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonusBall->GetPhysicsObject()->InitSphereInertia();
+
+	bonusBall->GetPhysicsObject()->SetCollisonType(CollisionType::BONUS);
+	bonusBall->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
+
+
+	world->AddGameObject(bonusBall);
+
+	return bonusBall;
 }
 
 
@@ -1008,6 +1077,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	movingCube->GetPhysicsObject()->SetCRes(0.0f);
 
 	movingCube->GetPhysicsObject()->SetCollisonType(CollisionType::MOVINGOBJECT);
+	movingCube->GetPhysicsObject()->SetState(ObjectState::STATIC);
 
 	world->AddGameObject(movingCube);
 

@@ -15,6 +15,7 @@ PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* 
 	cRestitution = 0.66f;
 
 	collisionType = CollisionType::NONE;
+	objectState = ObjectState::DYNAMIC;
 }
 
 PhysicsObject::~PhysicsObject() {

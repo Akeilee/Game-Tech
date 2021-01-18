@@ -19,6 +19,11 @@ namespace NCL {
 		NONE,
 	};
 
+	enum class ObjectState {
+		STATIC,
+		DYNAMIC,
+	};
+
 
 	namespace CSC8503 {
 		class Transform;
@@ -67,6 +72,14 @@ namespace NCL {
 			CollisionType GetCollisionType()const {
 				return collisionType;
 			}
+
+			void SetState(ObjectState os) {
+				objectState = os;
+			}
+			ObjectState GetState()const {
+				return objectState;
+			}
+
 
 			//printing enums
 			std::string ToString(CollisionType ct) const {
@@ -149,6 +162,7 @@ namespace NCL {
 
 
 			CollisionType collisionType;
+			ObjectState objectState;
 		};
 	}
 }
