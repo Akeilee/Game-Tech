@@ -2,7 +2,8 @@
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "StateGameObject.h"
-#include "../CSC8503Common/Enemy.h"
+#include "../CSC8503Common/BehaviourSequence.h"
+#include "../CSC8503Common/BehaviourAction.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -33,7 +34,17 @@ namespace NCL {
 
 			void TextOnScreen(float dt);
 
-			
+			float aaa=0;
+			BehaviourSequence* rootSequence;
+			BehaviourState state = BehaviourState::Ongoing;
+
+
+
+
+
+
+
+
 
 			void test(float dt);
 
@@ -43,6 +54,14 @@ namespace NCL {
 			vector <Vector3> testNodeCopy;
 			void TestPathfinding();
 			void DisplayPathfinding();
+
+			void InitBehavTreeExample();
+
+			GameObject* AddBehavCoin(string name, Vector4 colour, Vector3 position);
+
+			void TestBehaviourTree(float dt);
+
+
 
 			void SetPracticeMode(bool p) {
 				practiceMode = p;
@@ -90,9 +109,10 @@ namespace NCL {
 
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
+			GameObject* AddCoinMiner(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
-			GameObject* AddbonusBall(const Vector3& position);
+			GameObject* AddBonusBall(const Vector3& position);
 
 			GameObject* player; /////
 			GameObject* enemy; /////
@@ -151,7 +171,11 @@ namespace NCL {
 			bool practiceMode;
 
 			EnemyState enemyState;
-			
+
+			GameObject* coinMinerAI;
+			GameObject* behavCoin;
+			vector<GameObject*> behavCoins;
+
 		};
 	}
 }

@@ -9,6 +9,10 @@
 #include "../CSC8503Common/NavigationMesh.h"
 #include "../CSC8503Common/PushdownState.h"
 
+#include "../CSC8503Common/BehaviourAction.h"
+#include "../CSC8503Common/BehaviourSequence.h"
+#include "../CSC8503Common/BehaviourSelector.h"
+
 #include <iomanip>
 #include <sstream>
 #include <iostream>
@@ -194,6 +198,7 @@ void TutorialGame::UpdateGame(float dt) {
 	LoseGame();
 	WinGame();
 
+
 	SelectObject();
 	MoveSelectedObject();
 	physics->Update(dt);
@@ -234,8 +239,6 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 
 
-
-
 	if (testStateObject) {
 		testStateObject->Update(dt);
 	}
@@ -244,12 +247,22 @@ void TutorialGame::UpdateGame(float dt) {
 		test(dt);
 	}
 
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM9)) {
+		TestBehaviourTree(dt);
+	}
+
+
+
+
+
+
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);
 	renderer->Render();
+
 }
 
 void TutorialGame::TextOnScreen(float dt) {
@@ -418,7 +431,7 @@ void TutorialGame::test(float dt) {
 			if (!found || enemytimer > 10) {
 				testNodes.clear();
 				std::cout << "Stuck, teleporting near player!\n";
-				enemy->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5,0,5));
+				enemy->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5, 0, 5));
 				tempPos = Vector3(enemy->GetTransform().GetPosition().x + 80, enemy->GetTransform().GetPosition().y, enemy->GetTransform().GetPosition().z + 80);
 				found = grid.FindPath(Vector3(80, 0, 10), tempPos, path);
 
@@ -498,6 +511,7 @@ void TutorialGame::UpdateKeys() {
 
 
 
+
 	if (lockedObject) {
 		LockedObjectMovement();
 	}
@@ -508,7 +522,7 @@ void TutorialGame::UpdateKeys() {
 	/// <summary>
 	/// //////////////////////////
 	/// </summary>
-		
+
 	if (!practiceMode) {
 		movePlayer = true;
 	}
@@ -695,23 +709,26 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-
 	//BridgeConstraintTest();
+
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
+	InitBehavTreeExample();
+
 	//InitCubeGridWorld(5,5,10,10,Vector3(5,5,5));
 	//InitSphereGridWorld(5, 5, 10, 10, 10);
+
 	InitDefaultFloor();
 
 	TestPathfinding();
-	//DisplayPathfinding();
+
 	testStateObject = AddStateObjectToWorld(Vector3(30, 0, 0));
 
-
-	enemy->GetTransform().SetPosition(Vector3(testNodeCopy.back().x, 0, testNodeCopy.back().z));
+	enemy->GetTransform().SetPosition(testNodeCopy.back());
 
 	JumpPad();
 	SlowFloor();
+
 }
 
 //tut 8 Constraints and solvers
@@ -806,6 +823,8 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 	sphere->GetPhysicsObject()->SetCRes(0.1f);
 	sphere->GetPhysicsObject()->InitSphereInertia();
 
+	sphere->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
+
 	world->AddGameObject(sphere);
 
 	////////////////////hollow sphere = sphere1 inertia tensor - sphere2 inertia tensor.////////////////////////////
@@ -831,7 +850,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfH
 	capsule->GetPhysicsObject()->SetInverseMass(inverseMass);
 	capsule->GetPhysicsObject()->InitCubeInertia();
 
-
+	capsule->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
 	world->AddGameObject(capsule);
 
@@ -859,6 +878,7 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	/////
 	cube->GetPhysicsObject()->SetCRes(1.0f);  //higher number more elastic
 	cube->GetPhysicsObject()->InitCubeInertia();
+	cube->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
 	world->AddGameObject(cube);
 
@@ -916,7 +936,7 @@ void TutorialGame::InitGameExamples() {
 	AddEnemyToWorld(Vector3(5, 0.02, 0));
 	AddBonusToWorld(Vector3(10, 5, 0));
 	AddBonusToWorld(Vector3(20, 5, 0));
-	AddbonusBall(Vector3(50, 15, 50));
+	AddBonusBall(Vector3(50, 15, 50));
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -994,6 +1014,43 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	return enemy;
 }
 
+GameObject* TutorialGame::AddCoinMiner(const Vector3& position) {
+	float meshSize = 3.0f;
+	float inverseMass = 0.5f;
+
+	coinMinerAI = new GameObject();
+
+	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
+	coinMinerAI->SetBoundingVolume((CollisionVolume*)volume);
+
+	coinMinerAI->GetTransform()
+		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetPosition(position);
+
+	coinMinerAI->SetName("coinMiner");
+
+	coinMinerAI->SetRenderObject(new RenderObject(&coinMinerAI->GetTransform(), charMeshA, nullptr, basicShader));
+	coinMinerAI->SetPhysicsObject(new PhysicsObject(&coinMinerAI->GetTransform(), coinMinerAI->GetBoundingVolume()));
+
+	coinMinerAI->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+	coinMinerAI->GetRenderObject()->SetOriColour(Vector4(1, 1, 1, 1));
+
+	coinMinerAI->GetPhysicsObject()->SetInverseMass(inverseMass);
+	coinMinerAI->GetPhysicsObject()->InitSphereInertia();
+
+	coinMinerAI->GetPhysicsObject()->SetCRes(0.2);
+	coinMinerAI->GetPhysicsObject()->SetCollisonType(CollisionType::ENEMY);
+	coinMinerAI->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
+
+	coinMinerAI->GetRenderObject().SetNodeState();
+	//if get coin, node state will update. else will be ongoing
+
+	world->AddGameObject(coinMinerAI);
+
+	return coinMinerAI;
+}
+
+
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	//GameObject* apple = new GameObject();
 	apple = new GameObject();
@@ -1016,14 +1073,14 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	apple->GetPhysicsObject()->InitSphereInertia();
 
 	apple->GetPhysicsObject()->SetCollisonType(CollisionType::BONUS);
-	apple->GetPhysicsObject()->SetState(ObjectState::STATIC);
+	apple->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
 	world->AddGameObject(apple);
 
 	return apple;
 }
 
-GameObject* TutorialGame::AddbonusBall(const Vector3& position) {
+GameObject* TutorialGame::AddBonusBall(const Vector3& position) {
 	//GameObject* apple = new GameObject();
 	bonusBall = new GameObject();
 
@@ -1077,7 +1134,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	movingCube->GetPhysicsObject()->SetCRes(0.0f);
 
 	movingCube->GetPhysicsObject()->SetCollisonType(CollisionType::MOVINGOBJECT);
-	movingCube->GetPhysicsObject()->SetState(ObjectState::STATIC);
+	movingCube->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
 	world->AddGameObject(movingCube);
 
@@ -1271,12 +1328,6 @@ void TutorialGame::MoveSelectedObject() {
 }
 
 
-
-
-
-
-
-
 //tut 10
 void TutorialGame::TestPathfinding() {
 
@@ -1298,7 +1349,6 @@ void TutorialGame::TestPathfinding() {
 	testNodeCopy = testNodes;
 }
 
-
 void TutorialGame::DisplayPathfinding() {
 	for (int i = 1; i < testNodes.size(); ++i) {
 		Vector3 a = testNodes[i - 1];
@@ -1308,3 +1358,238 @@ void TutorialGame::DisplayPathfinding() {
 	}
 
 }
+
+
+
+
+void TutorialGame::InitBehavTreeExample() {
+	AddCoinMiner(Vector3(70, 5, -90));
+
+	behavCoins.clear();
+	behavCoins.push_back(AddBehavCoin("normalCoin", Vector4(1, 1, 0, 1), Vector3(90, 5, -90)));
+
+	int generateColourCoin = rand() % 4;
+	switch (generateColourCoin) {
+	case 0:
+		behavCoins.push_back(AddBehavCoin("redCoin", Vector4(1, 0, 0, 1), Vector3(90, 5, -80)));
+		break;
+	case 1:
+		behavCoins.push_back(AddBehavCoin("blueCoin", Vector4(0, 0, 1, 1), Vector3(90, 5, -70)));
+		break;
+	case 2:
+		behavCoins.push_back(AddBehavCoin("redCoin", Vector4(1, 0, 0, 1), Vector3(90, 5, -60)));
+		behavCoins.push_back(AddBehavCoin("blueCoin", Vector4(0, 0, 1, 1), Vector3(90, 5, -50)));
+		break;
+	case 3:
+		//generate no coin
+		break;
+	}
+
+}
+
+GameObject* TutorialGame::AddBehavCoin(string name, Vector4 colour, Vector3 position) {
+	behavCoin = new GameObject();
+
+	SphereVolume* volume = new SphereVolume(1.25f);
+	behavCoin->SetBoundingVolume((CollisionVolume*)volume);
+	behavCoin->GetTransform()
+		.SetScale(Vector3(0.25, 0.25, 0.25))
+		.SetPosition(position);
+
+	behavCoin->SetName(name);
+
+	behavCoin->SetRenderObject(new RenderObject(&behavCoin->GetTransform(), bonusMesh, nullptr, basicShader));
+	behavCoin->SetPhysicsObject(new PhysicsObject(&behavCoin->GetTransform(), behavCoin->GetBoundingVolume()));
+
+	behavCoin->GetRenderObject()->SetColour(colour);
+	behavCoin->GetRenderObject()->SetOriColour(colour);
+
+	behavCoin->GetPhysicsObject()->SetInverseMass(1.0f);
+	behavCoin->GetPhysicsObject()->InitSphereInertia();
+
+	behavCoin->GetPhysicsObject()->SetCollisonType(CollisionType::BONUS);
+	behavCoin->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
+
+
+	world->AddGameObject(behavCoin);
+
+	return behavCoin;
+}
+
+
+
+//tut 12
+void TutorialGame::TestBehaviourTree(float time) {
+
+	float behaviourTimer;
+	float distanceToTarget;
+
+	Vector3 coinMinerPos = coinMinerAI->GetTransform().GetPosition();
+	Vector3 nCoinPos;
+	Vector3 rCoinPos;
+	Vector3 bCoinPos;
+
+	for (auto& i : behavCoins) {
+		if (i->GetName() == "normalCoin") {
+			nCoinPos = i->GetTransform().GetPosition();
+			//std::cout << "normal " << nCoinPos << "\n";
+		}
+		if (i->GetName() == "redCoin") {
+			rCoinPos = i->GetTransform().GetPosition();
+			//std::cout << "Red " << rCoinPos << "\n";
+		}
+		if (i->GetName() == "blueCoin") {
+			bCoinPos = i->GetTransform().GetPosition();
+			//std::cout << "blue " << bCoinPos << "\n";
+		}
+	}
+
+
+	Vector3 roomPos = Vector3(80, 0, -90);
+	float force = -1;
+	int noOfCoins = 0;
+
+
+	BehaviourAction* findCoin = new BehaviourAction("Find Coin", [&](float dt, BehaviourState state)-> BehaviourState {
+		aaa += dt;
+		//std::cout << aaa << "\n";
+		if (state == BehaviourState::Initialise) {
+			std::cout << "Finding Coin!\n";
+			Vector3 direction = nCoinPos - coinMinerPos;
+			coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
+			state = BehaviourState::Ongoing;
+		}
+
+		 else if (state == BehaviourState::Ongoing) {
+			if (physics->minedCoin == true && aaa<= 50000) {
+				std::cout << "Found Coin !\n";
+				noOfCoins++;
+				physics->minedCoin = false;
+				aaa = 0;
+				return BehaviourState::Success;
+			}
+
+			if (aaa > 50000) {
+				aaa = 0;
+				return BehaviourState::Failure;
+			}
+		}
+		return state; // will be ’ongoing ’ until success
+		}
+	);
+
+
+	BehaviourAction* goToRoom = new BehaviourAction("Go To Room", [&](float dt, BehaviourState state)-> BehaviourState {
+		aaa += dt;
+		if (state == BehaviourState::Initialise) {
+			Vector3 direction = roomPos - coinMinerPos;
+			coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
+			std::cout << "Going to coin room!\n";
+			state = BehaviourState::Ongoing;
+		}
+
+		else if (state == BehaviourState::Ongoing) {
+			if ((roomPos - coinMinerPos).Length() <= 5 && aaa <= 50000) {
+				std::cout << " Reached room !\n";
+				std::cout << coinMinerPos;
+				return BehaviourState::Success;
+			}
+
+			if (aaa > 50000) {
+				//return BehaviourState::Failure;
+			}
+		}
+		return state; // will be ’ongoing ’ until success
+		}
+	);
+
+
+	BehaviourAction* lookForRed = new BehaviourAction("Look For Red Coin", [&](float dt, BehaviourState state)-> BehaviourState {
+		if (state == BehaviourState::Initialise) {
+			std::cout << "Looking for Red Coin!\n";
+			Vector3 direction = rCoinPos - coinMinerPos;
+			coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
+			return BehaviourState::Ongoing;
+		}
+
+		else if (state == BehaviourState::Ongoing) {
+
+			if (physics->foundRed) {
+				std::cout << "I found a Red Coin!\n";
+				noOfCoins++;
+				physics->foundRed = false;
+				return BehaviourState::Success;
+			}
+			std::cout << "No red coin in here...\n";
+			return BehaviourState::Failure;
+		}
+
+		return state;
+		}
+	);
+
+	BehaviourAction* lookForBlue = new BehaviourAction("Look For Blue Coin", [&](float dt, BehaviourState state)-> BehaviourState { //if no treasure, maybe there are items to take
+		if (state == BehaviourState::Initialise) {
+			std::cout << "Looking for Blue Coin!\n";
+			Vector3 direction = bCoinPos - coinMinerPos;
+			coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
+			return BehaviourState::Ongoing;
+		}
+
+		else if (state == BehaviourState::Ongoing) {
+
+			if (physics->foundBlue) {
+				std::cout << "I found a blue coin!\n";
+				noOfCoins++;
+				physics->foundBlue = false;
+				return BehaviourState::Success;
+			}
+			std::cout << "No blue coin in here ...\n";
+			return BehaviourState::Failure;
+		}
+
+		return state;
+		}
+	);
+
+
+	//connecting states together by add children
+	BehaviourSequence* sequence = new BehaviourSequence("Room Sequence "); //sequence
+	sequence->AddChild(findCoin);
+	sequence->AddChild(goToRoom);
+
+	BehaviourSelector* selection = new BehaviourSelector("Loot Selection "); //selector
+	selection->AddChild(lookForRed);
+	selection->AddChild(lookForBlue);
+
+	rootSequence = new BehaviourSequence("Root Sequence "); //root adding sequence and selector
+	rootSequence->AddChild(sequence);
+	rootSequence->AddChild(selection);
+
+
+	rootSequence->Reset();
+
+	//BehaviourState state = BehaviourState::Ongoing;
+	std::cout << "Going to mine coins!\n";
+
+
+	while (state == BehaviourState::Ongoing && time <1000000) {
+		state = rootSequence->Execute(time);
+	}
+
+	if (state == BehaviourState::Success) {
+		std::cout << "Success - Mined " << noOfCoins << " coins!\n";
+	}
+
+	else if (state == BehaviourState::Failure) {
+		std::cout << "Fail - No coins mined :(\n";
+	}
+
+	std::cout << "Finished Mining Job!\n";
+
+
+}
+
+
+
+

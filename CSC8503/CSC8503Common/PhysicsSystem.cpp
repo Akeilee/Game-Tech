@@ -36,6 +36,7 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g) {
 	collectedBonusBall = false;
 	enemy1 = false;
 	player1 = false;
+	minedCoin = false;
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -299,6 +300,26 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	if (a.GetName() == "enemy" && (b.GetName() == "floor") || b.GetName() == "enemy" && (a.GetName() == "floor")) {
 		slowfloorE = false;
 	}
+
+
+	//behaviour tree example
+	if (a.GetName() == "normalCoin" && b.GetName() == "coinMiner" || b.GetName() == "normalCoin" && a.GetName() == "coinMiner") {
+		minedCoin = true;
+		if (a.GetName() == "normalCoin") {
+			a.SetIsActive(false);
+		}
+		if (b.GetName() == "normalCoin") {
+			b.SetIsActive(false);
+		}
+	}
+	if (a.GetName() == "redCoin" && b.GetName() == "coinMiner" || b.GetName() == "redCoin" && a.GetName() == "coinMiner") {
+		foundRed = true;
+	}
+	if (a.GetName() == "blueCoin" && b.GetName() == "coinMiner" || b.GetName() == "blueCoin" && a.GetName() == "coinMiner") {
+		foundBlue = true;
+	}
+
+
 
 
 	//springs for bonusBall coin

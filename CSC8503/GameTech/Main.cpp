@@ -11,8 +11,6 @@
 #include "../CSC8503Common/BehaviourSequence.h"
 #include "../CSC8503Common/BehaviourSelector.h"
 
-
-
 #include "../CSC8503Common/NavigationGrid.h"
 #include "../CSC8503Common/NavigationMesh.h"
 

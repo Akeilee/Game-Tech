@@ -3,7 +3,6 @@
 #include <functional>
 
 typedef std::function <BehaviourState(float, BehaviourState)> BehaviourActionFunc; //takes in timestep and new node current state. Returns new behaviourState
-
 class BehaviourAction : public BehaviourNode {
 
 public:
@@ -19,5 +18,4 @@ public:
 
 protected:
 	BehaviourActionFunc function;
-
 };

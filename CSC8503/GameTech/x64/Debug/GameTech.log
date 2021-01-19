@@ -1,1 +1,30 @@
-﻿  GameTech.vcxproj -> C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\GameTech.exe
+﻿  TutorialGame.cpp
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(82,82): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(115,82): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(275,61): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(308,66): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(309,64): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(347,43): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(685,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(782,62): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(783,65): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(838,63): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(935,37): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(936,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(968,63): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(969,66): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(974,41): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1002,59): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1003,62): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1008,40): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1041,46): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1066,59): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1067,62): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1095,63): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1096,66): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1180,71): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1285,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1421,8): warning C4101: 'behaviourTimer': unreferenced local variable
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1422,8): warning C4101: 'distanceToTarget': unreferenced local variable
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\PhysicsObject.h(109): warning C4715: 'NCL::CSC8503::PhysicsObject::ToString': not all control paths return a value
+  GameTech.vcxproj -> C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\GameTech.exe
