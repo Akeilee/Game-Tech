@@ -36,7 +36,6 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g) {
 	collectedBonusBall = false;
 	enemy1 = false;
 	player1 = false;
-	minedCoin = false;
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -303,20 +302,15 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 
 
 	//behaviour tree example
-	if (a.GetName() == "normalCoin" && b.GetName() == "coinMiner" || b.GetName() == "normalCoin" && a.GetName() == "coinMiner") {
-		minedCoin = true;
-		if (a.GetName() == "normalCoin") {
+	if (a.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS && b.GetPhysicsObject()->GetCollisionType() == CollisionType::BEHAVAI || 
+		b.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS && a.GetPhysicsObject()->GetCollisionType() == CollisionType::BEHAVAI) {
+
+		if (a.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS) {
 			a.SetIsActive(false);
 		}
-		if (b.GetName() == "normalCoin") {
+		if (b.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS) {
 			b.SetIsActive(false);
 		}
-	}
-	if (a.GetName() == "redCoin" && b.GetName() == "coinMiner" || b.GetName() == "redCoin" && a.GetName() == "coinMiner") {
-		foundRed = true;
-	}
-	if (a.GetName() == "blueCoin" && b.GetName() == "coinMiner" || b.GetName() == "blueCoin" && a.GetName() == "coinMiner") {
-		foundBlue = true;
 	}
 
 
@@ -463,10 +457,6 @@ void PhysicsSystem::BroadPhase() {
 
 				//ignore static object collision
 				if (info.a->GetPhysicsObject()->GetState() == ObjectState::STATIC && info.b->GetPhysicsObject()->GetState() == ObjectState::STATIC) {
-					break;
-				}
-
-				if (info.a->GetName() == "bonus" && info.b->GetName() == "bonus") { 
 					break;
 				}
 

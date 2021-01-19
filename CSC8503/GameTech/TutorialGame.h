@@ -22,9 +22,9 @@ namespace NCL {
 			TutorialGame();
 
 
-			void LoseGame();
+			void LoseGame(float dt);
 
-			void WinGame();
+			void WinGame(float dt);
 
 
 
@@ -34,19 +34,10 @@ namespace NCL {
 
 			void TextOnScreen(float dt);
 
-			float aaa=0;
-			BehaviourSequence* rootSequence;
-			BehaviourState state = BehaviourState::Ongoing;
 
 
 
-
-
-
-
-
-
-			void test(float dt);
+			void EnemyAI(float dt);
 
 			void OppositeForce();
 
@@ -70,6 +61,12 @@ namespace NCL {
 				return practiceMode;
 			}
 
+			void SetRestart(bool r) {
+				restart = r;
+			}
+			bool GetRestart() {
+				return restart;
+			}
 
 		protected:
 
@@ -175,7 +172,11 @@ namespace NCL {
 			GameObject* coinMinerAI;
 			GameObject* behavCoin;
 			vector<GameObject*> behavCoins;
+			vector<GameObject*> bonus;
 
+			bool spawnedCoins;
+
+			bool restart;
 		};
 	}
 }

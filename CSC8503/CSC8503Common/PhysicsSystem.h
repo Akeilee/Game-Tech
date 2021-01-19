@@ -39,9 +39,7 @@ namespace NCL {
 			bool collectedBonusBall;
 			bool enemy1;
 			bool player1;
-			bool minedCoin;
-			bool foundRed;
-			bool foundBlue;
+
 
 		protected:
 			void BasicCollisionDetection();

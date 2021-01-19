@@ -22,7 +22,9 @@ using namespace CSC8503;
 
 
 bool exitGame = false;
+bool restart = false;
 bool practice;
+
 
 
 //tut 9
@@ -142,6 +144,13 @@ class GameScreen : public PushdownState {
 			return PushdownResult::Pop;
 		}
 
+		if (g->GetRestart() == true) {
+			restart = true;
+			g->SetRestart(false);
+			std::cout << "Restarting Game...\n";
+			return PushdownResult::Pop;
+		}
+
 		g->UpdateGame(dt);
 
 		return PushdownResult::NoChange;
@@ -210,6 +219,13 @@ class IntroScreen : public PushdownState {
 			break;
 		}
 
+		if (restart == true) {
+			practice = false;
+			restart = false;
+			std::cout << "Restarted Game!\n";
+			*newState = new GameScreen();
+			return PushdownResult::Push;
+		}
 
 		if ((Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN) && counter == 0)) {
 			practice = false;

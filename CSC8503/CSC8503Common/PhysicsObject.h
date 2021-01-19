@@ -14,6 +14,7 @@ namespace NCL {
 		PLAYER,
 		ENEMY,
 		BONUS,
+		BEHAVAI,
 		JUMPPAD,
 		MOVINGOBJECT,
 		NONE,
@@ -95,6 +96,9 @@ namespace NCL {
 					break;
 				case CollisionType::BONUS:
 					return "BONUS";
+					break;
+				case CollisionType::BEHAVAI:
+					return "BEHAVAI";
 					break;
 				case CollisionType::JUMPPAD:
 					return "JUMPPAD";
