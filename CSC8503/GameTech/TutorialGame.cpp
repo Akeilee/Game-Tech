@@ -218,7 +218,8 @@ void TutorialGame::UpdateGame(float dt) {
 
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
-		Vector3 camPos = objPos + lockedOffset;
+		//Vector3 camPos = objPos + lockedOffset;
+		Vector3 camPos = objPos +Vector3(0, 20, 60);;
 
 		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
 
@@ -238,7 +239,7 @@ void TutorialGame::UpdateGame(float dt) {
 	if (movePlayer == true) {
 		Vector3 objPos = player->GetTransform().GetPosition();
 		Quaternion orientation = player->GetTransform().GetOrientation();
-		Vector3 camPos = objPos + Vector3(0, 14, 40); //higher z = farther back camera
+		Vector3 camPos = objPos + Vector3(0, 20, 60); //higher z = farther back camera
 
 		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
 
@@ -248,10 +249,10 @@ void TutorialGame::UpdateGame(float dt) {
 		Vector3 angles = q.ToEuler();
 		Vector3 orien = orientation.ToEuler();
 		world->GetMainCamera()->SetPosition(camPos);
-		world->GetMainCamera()->SetPitch(angles.x + 10);
+		//world->GetMainCamera()->SetPitch(angles.x + 10);
 
 		//world->GetMainCamera()->SetYaw(angles.y + orien.y); //moving camera with player
-		world->GetMainCamera()->SetYaw(angles.y);
+		//world->GetMainCamera()->SetYaw(angles.y);
 
 	}
 
@@ -850,8 +851,8 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetNearPlane(0.1f);
 	world->GetMainCamera()->SetFarPlane(500.0f);
 	world->GetMainCamera()->SetPitch(-15.0f);
-	world->GetMainCamera()->SetYaw(315.0f);
-	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
+	world->GetMainCamera()->SetYaw(360.0f);
+	world->GetMainCamera()->SetPosition(Vector3(0, 40, 100));
 	lockedObject = nullptr;
 }
 
@@ -906,7 +907,7 @@ void TutorialGame::Walls() {
 	AddCubeToWorld(Vector3(-65, 5, 55), Vector3(15, 5, 5), 0);
 	
 	AddCubeToWorld(Vector3(-35, 5, 45), Vector3(5, 5, 15), 0);
-	AddCubeToWorld(Vector3(-25, 5, -10), Vector3(5, 5, 50), 0);
+	AddCubeToWorld(Vector3(-25, 5, 10), Vector3(5, 5, 30), 0);
 	AddCubeToWorld(Vector3(-30, 5, -65), Vector3(10, 5, 5), 0);
 	AddCubeToWorld(Vector3(-30, 5, -85), Vector3(10, 5, 5), 0);
 	AddCubeToWorld(Vector3(-35, 5, 10), Vector3(5, 5, 10), 0);
@@ -915,6 +916,7 @@ void TutorialGame::Walls() {
 	AddCubeToWorld(Vector3(-55, 5, -10), Vector3(5, 5, 10), 0);
 	AddCubeToWorld(Vector3(-70, 5, 25), Vector3(20, 5, 5), 0);
 	AddCubeToWorld(Vector3(-65, 5, 35), Vector3(15, 5, 5), 0);
+	AddCubeToWorld(Vector3(-25, 5, -45), Vector3(5, 5, 15), 0);
 
 
 }
@@ -1532,9 +1534,9 @@ void TutorialGame::TestPathfinding() {
 
 	NavigationPath outPath; //making path 
 
-	Vector3 startPos(80, 0, 10); //(0,0,-70)
+	Vector3 startPos(95, 0, 5); //(0,0,-90)
 
-	Vector3 endPos(160, 0, 160); //(80.0,80)
+	Vector3 endPos(180, 0, 180); //(85,0,85)
 
 	bool found = grid.FindPath(startPos, endPos, outPath); //finding path and putting it into outPath
 

@@ -1,5 +1,2 @@
-﻿  CollisionDetection.cpp
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\CollisionDetection.cpp(186,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\CollisionDetection.cpp(902,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\CollisionDetection.cpp(909,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+﻿  NavigationGrid.cpp
   CSC8503Common.vcxproj -> C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\CSC8503Common.lib

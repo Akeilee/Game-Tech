@@ -38,7 +38,7 @@ NavigationGrid::NavigationGrid(const std::string& filename) : NavigationGrid() {
 			char type = 0;
 			infile >> type;
 			n.type = type;
-			n.position = Vector3((float)(x * nodeSize - 80), 0, (float)(y * nodeSize - 80)); /////////////////////////////
+			n.position = Vector3((float)(x * nodeSize - 95), 0, (float)(y * nodeSize - 95)); /////////////////////////////
 		}
 	}
 
@@ -59,7 +59,7 @@ NavigationGrid::NavigationGrid(const std::string& filename) : NavigationGrid() {
 			if (x < gridWidth - 1) { //get right node
 				n.connected[3] = &allNodes[(gridWidth * (y)) + (x + 1)];
 			}
-			for (int i = 0; i < 4; ++i) {
+			for (int i = 0; i < 4; ++i) { /////////////////////////////////////////////////////////////////
 				if (n.connected[i]) {
 					if (n.connected[i]->type == '.') {
 						n.costs[i] = 1;
