@@ -294,7 +294,7 @@ void TutorialGame::UpdateGame(float dt) {
 void TutorialGame::PlaneBonusIntersection() {
 	Vector3 plane = Vector3(0, -10, 0);
 	Vector3 normal = plane.Normalised();
-	float r = 1.25;
+	float r = 1;
 
 	Plane* p = new Plane(plane, r);
 
@@ -302,6 +302,12 @@ void TutorialGame::PlaneBonusIntersection() {
 		//std::cout<< p->GetPointOnPlane()<<"\n";
 		bonusBall->GetTransform().SetPosition(Vector3(90, 5, 90));
 	}
+
+
+	//if (p->AABBInPlane(bonusBall->GetTransform().GetPosition(), Vector3(2.5, 2.5, 2.5))) {
+		//std::cout << "aa";
+		//std::cout << p->GetPointOnPlane() << "\n";
+	//}
 
 }
 
@@ -857,6 +863,7 @@ void TutorialGame::InitWorld() {
 
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
+	Walls();
 
 	InitBehavTreeExample();
 
@@ -870,6 +877,48 @@ void TutorialGame::InitWorld() {
 	enemy->GetTransform().SetPosition(testNodeCopy.back());
 
 }
+
+void TutorialGame::Walls() {
+
+	Vector3 cubeSize = Vector3(5, 5, 40);
+	AddCubeToWorld(Vector3(95, 5, 60), Vector3(5, 5, 40), 0);
+	AddCubeToWorld(Vector3(80, 5, 30), Vector3(10, 5,10), 0);
+	AddCubeToWorld(Vector3(55, 5, 85), Vector3(5, 5, 15), 0);
+	AddCubeToWorld(Vector3(-20, 5, 95), Vector3(70, 5, 5), 0);
+	AddCubeToWorld(Vector3(-95, 5, 75), Vector3(5, 5, 25), 0);
+
+	AddCubeToWorld(Vector3(-95, 5, -30), Vector3(5, 5, 70), 0);
+	AddCubeToWorld(Vector3(-55, 5, -95), Vector3(35, 5, 5), 0);
+	AddCubeToWorld(Vector3(-15, 5, -90), Vector3(5, 5, 10), 0);
+	AddCubeToWorld(Vector3(15, 5, -90), Vector3(5, 5, 10), 0);
+	AddCubeToWorld(Vector3(95, 5, -45), Vector3(5, 5, 55), 0);
+	
+	AddCubeToWorld(Vector3(85, 5, -5), Vector3(10, 5, 15), 0);
+	AddCubeToWorld(Vector3(45, 5, 0), Vector3(5, 5, 10), 0);
+	AddCubeToWorld(Vector3(35, 5, -15), Vector3(15, 5, 5), 0);
+	AddCubeToWorld(Vector3(25, 5, -45), Vector3(5, 5, 25), 0);
+	AddCubeToWorld(Vector3(30, 5, -85), Vector3(10, 5, 5), 0);
+	
+	AddCubeToWorld(Vector3(45, 5, -70), Vector3(5, 5, 10), 0);
+	AddCubeToWorld(Vector3(60, 5, -65), Vector3(10, 5, 5), 0);
+	AddCubeToWorld(Vector3(75, 5, -70), Vector3(5, 5, 10), 0);
+	AddCubeToWorld(Vector3(-55, 5, 65), Vector3(25, 5, 5), 0);
+	AddCubeToWorld(Vector3(-65, 5, 55), Vector3(15, 5, 5), 0);
+	
+	AddCubeToWorld(Vector3(-35, 5, 45), Vector3(5, 5, 15), 0);
+	AddCubeToWorld(Vector3(-25, 5, -10), Vector3(5, 5, 50), 0);
+	AddCubeToWorld(Vector3(-30, 5, -65), Vector3(10, 5, 5), 0);
+	AddCubeToWorld(Vector3(-30, 5, -85), Vector3(10, 5, 5), 0);
+	AddCubeToWorld(Vector3(-35, 5, 10), Vector3(5, 5, 10), 0);
+	
+	AddCubeToWorld(Vector3(-50, 5, 5), Vector3(10, 5, 5), 0);
+	AddCubeToWorld(Vector3(-55, 5, -10), Vector3(5, 5, 10), 0);
+	AddCubeToWorld(Vector3(-70, 5, 25), Vector3(20, 5, 5), 0);
+	AddCubeToWorld(Vector3(-65, 5, 35), Vector3(15, 5, 5), 0);
+
+
+}
+
 
 //tut 8 Constraints and solvers
 void TutorialGame::BridgeConstraintTest() {
@@ -1016,6 +1065,10 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
 
+	cube->GetRenderObject()->SetColour(Vector4(1,1,1,1)); ///////////////////////////////////////////////////////////////////////////////////////////////////
+	cube->GetRenderObject()->SetOriColour(Vector4(1, 1, 1, 1));
+	cube->GetRenderObject()->SetDefaultTexture(nullptr);
+
 	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
 	/////
 	cube->GetPhysicsObject()->SetCRes(1.0f);  //higher number more elastic
@@ -1047,7 +1100,7 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 
 			if (rand() % 2) {
 				//AddCubeToWorld(position, cubeDims);
-				AddCapsuleToWorld(position, 0.85f * 3, 0.3f * 3, 1.0);
+				//AddCapsuleToWorld(position, 0.85f * 3, 0.3f * 3, 1.0);
 			}
 			else {
 				//AddCapsuleToWorld(position, 0.85f*3, 0.3f*3);
@@ -1232,6 +1285,7 @@ GameObject* TutorialGame::AddBonusBall(const Vector3& position) {
 	bonusBall->GetTransform()
 		.SetScale(Vector3(0.25, 0.25, 0.25))
 		.SetPosition(position);
+
 
 	bonusBall->SetName("bonusBall");
 

@@ -27,6 +27,9 @@ namespace NCL {
 			float	GetDistance() const { return distance; }
 			//Performs a simple sphere / plane test
 			bool SphereInPlane(const Vector3 &position, float radius) const;
+
+			bool AABBInPlane(const Vector3& boxPos, const Vector3& boxSize);
+
 			//Performs a simple sphere / point test
 			bool PointInPlane(const Vector3 &position) const;
 

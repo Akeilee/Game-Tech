@@ -84,6 +84,8 @@ namespace NCL {
 
 			void InitWorld();
 
+			void Walls();
+
 			void InitGameExamples();
 
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);

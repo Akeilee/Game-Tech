@@ -38,6 +38,19 @@ bool Plane::SphereInPlane(const Vector3 &position, float radius) const {
 	return true;	
 }
 
+bool Plane::AABBInPlane(const Vector3& boxPos, const Vector3& boxSize) {
+	Vector3 boxMin = boxPos - boxSize; //box max min value of axis
+	Vector3 boxMax = boxPos + boxSize;
+	Vector3 extent = boxMax - boxPos;
+
+	float proj = extent.x * abs(normal.x) + extent.y * abs(normal.y) + extent.z * abs(normal.z);
+
+	float d = Vector3::Dot(normal, boxPos) - distance;
+
+	return abs(d) <= proj;  //if true then collision
+
+}
+
 bool Plane::PointInPlane(const Vector3 &position) const {
 	if(Vector3::Dot(position,normal)+distance < -0.001f) {
 		return false;
@@ -67,3 +80,4 @@ Vector3 Plane::ProjectPointOntoPlane(const Vector3 &point) const {
 
 	return point - (normal * distance);
 }
+
