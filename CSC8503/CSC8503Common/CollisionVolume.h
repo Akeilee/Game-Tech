@@ -17,6 +17,10 @@ namespace NCL {
 		}
 		~CollisionVolume() {}
 
+
+		VolumeType GetType() const {
+			return type;
+		}
 		VolumeType type;
 	};
 }

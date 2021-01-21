@@ -1,2 +1,3 @@
-﻿  PhysicsSystem.cpp
+﻿  CollisionDetection.cpp
+C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\CollisionDetection.cpp(185,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   CSC8503Common.vcxproj -> C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\CSC8503Common.lib

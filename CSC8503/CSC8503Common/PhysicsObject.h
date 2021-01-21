@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Common/Vector3.h"
 #include "../../Common/Matrix3.h"
+#include "CollisionVolume.h"
 
 #include <string>
 
@@ -73,6 +74,32 @@ namespace NCL {
 			CollisionType GetCollisionType()const {
 				return collisionType;
 			}
+
+			//get volume type
+			VolumeType GetCollisionVolume()const {
+				return volume->GetType();
+			}
+
+			std::string PrintColVol(VolumeType vt) const {
+				switch (vt) {
+				case VolumeType::AABB:
+					return "AABB";
+					break;
+				case VolumeType::Capsule:
+					return "Capsule";
+					break;
+				case VolumeType::OBB:
+					return "OBB";
+					break;
+				case VolumeType::Sphere:
+					return "Sphere";
+					break;
+				default:
+					return "no type";
+					break;
+				}
+			}
+
 
 			void SetState(ObjectState os) {
 				objectState = os;

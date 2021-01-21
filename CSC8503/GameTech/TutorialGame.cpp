@@ -36,6 +36,10 @@ TutorialGame::TutorialGame() {
 	testStateObject = nullptr;
 	player = nullptr;
 	enemy = nullptr;
+	coinMinerAI = nullptr;
+	behavCoin = nullptr;
+	apple = nullptr;
+	bonusBall = nullptr;
 
 	forceMagnitude = 10.0f;
 	useGravity = false;
@@ -144,8 +148,8 @@ void TutorialGame::InitialiseAssets() {
 	};
 
 	if (practiceMode) {
-	useGravity = true;
-	physics->UseGravity(useGravity);
+		useGravity = true;
+		physics->UseGravity(useGravity);
 	}
 
 	loadFunc("cube.msh", &cubeMesh);
@@ -233,6 +237,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 	if (movePlayer == true) {
 		Vector3 objPos = player->GetTransform().GetPosition();
+		Quaternion orientation = player->GetTransform().GetOrientation();
 		Vector3 camPos = objPos + Vector3(0, 14, 40); //higher z = farther back camera
 
 		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
@@ -241,10 +246,13 @@ void TutorialGame::UpdateGame(float dt) {
 
 		Quaternion q(modelMat);
 		Vector3 angles = q.ToEuler();
-
+		Vector3 orien = orientation.ToEuler();
 		world->GetMainCamera()->SetPosition(camPos);
 		world->GetMainCamera()->SetPitch(angles.x + 10);
+
+		//world->GetMainCamera()->SetYaw(angles.y + orien.y); //moving camera with player
 		world->GetMainCamera()->SetYaw(angles.y);
+
 	}
 
 
@@ -253,18 +261,26 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 
 	if (!practiceMode) {
-		EnemyAI(dt);
+		EnemyAI(dt); //enemy only moves in game mode
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM9)) {
 		TestBehaviourTree(dt);
 	}
 
+	//spinning coins
 	for (auto i : bonus) {
 		i->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
 	}
 
+
+
 	//bonusBall->GetPhysicsObject()->AddTorque(Vector3(0, 1, 0));
+
+	FallenOffStage();
+	PlaneBonusIntersection();
+
+
 
 
 	world->UpdateWorld(dt);
@@ -272,6 +288,20 @@ void TutorialGame::UpdateGame(float dt) {
 
 	Debug::FlushRenderables(dt);
 	renderer->Render();
+
+}
+
+void TutorialGame::PlaneBonusIntersection() {
+	Vector3 plane = Vector3(0, -10, 0);
+	Vector3 normal = plane.Normalised();
+	float r = 1.25;
+
+	Plane* p = new Plane(plane, r);
+
+	if (p->SphereInPlane(bonusBall->GetTransform().GetPosition(), r)) {
+		//std::cout<< p->GetPointOnPlane()<<"\n";
+		bonusBall->GetTransform().SetPosition(Vector3(90, 5, 90));
+	}
 
 }
 
@@ -471,8 +501,95 @@ void TutorialGame::EnemyAI(float dt) {
 }
 
 
-void TutorialGame::OppositeForce() {
+void TutorialGame::FallenOffStage() {
 
+	Vector3 playerPos = player->GetTransform().GetPosition();
+	if (playerPos.y <= -20 || playerPos.y >= 200) {
+		float x = 0;
+		float z = 0;
+
+
+		if (playerPos.x < -100) {
+			x = -90;
+		}
+		if (playerPos.x > 100) {
+			x = 90;
+		}
+		if (playerPos.x > -100 && playerPos.x < 100) {
+			x = playerPos.x;
+		}
+		if (playerPos.z < -100) {
+			z = -90;
+		}
+		if (playerPos.z > 100) {
+			z = 90;
+		}
+		if (playerPos.z > -100 && playerPos.z < 100) {
+			z = playerPos.z;
+		}
+		player->GetPhysicsObject()->ClearForces();
+		player->GetTransform().SetPosition(Vector3(x, 5, z));
+
+	}
+
+
+	Vector3 enemyPos = enemy->GetTransform().GetPosition();
+	if (enemyPos.y <= -20 || enemyPos.y >= 200) {
+		float x = 0;
+		float z = 0;
+
+
+		if (enemyPos.x < -100) {
+			x = -90;
+		}
+		if (enemyPos.x > 100) {
+			x = 90;
+		}
+		if (enemyPos.x > -100 && enemyPos.x < 100) {
+			x = enemyPos.x;
+		}
+		if (enemyPos.z < -100) {
+			z = -90;
+		}
+		if (enemyPos.z > 100) {
+			z = 90;
+		}
+		if (enemyPos.z > -100 && enemyPos.z < 100) {
+			z = enemyPos.z;
+		}
+		enemy->GetPhysicsObject()->ClearForces();
+		enemy->GetTransform().SetPosition(Vector3(x, 5, z));
+
+	}
+
+
+	Vector3 minerPos = coinMinerAI->GetTransform().GetPosition();
+	if (minerPos.y <= -10 || minerPos.y >= 50) {
+		float x = 0;
+		float z = 0;
+
+		if (minerPos.x < -100) {
+			x = -90;
+		}
+		if (minerPos.x > 100) {
+			x = 90;
+		}
+		if (minerPos.x > -100 && minerPos.x < 100) {
+			x = minerPos.x;
+		}
+		if (minerPos.z < -100) {
+			z = -90;
+		}
+		if (minerPos.z > 100) {
+			z = 90;
+		}
+		if (minerPos.z > -100 && minerPos.z < 100) {
+			z = minerPos.z;
+		}
+		coinMinerAI->GetPhysicsObject()->ClearForces();
+		coinMinerAI->GetTransform().SetPosition(Vector3(x, 5, z));
+
+	}
 
 }
 
@@ -491,6 +608,7 @@ void TutorialGame::UpdateKeys() {
 		loseGame = false;
 		winGame = false;
 		once = false;
+		bonus.clear();
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -597,8 +715,11 @@ void TutorialGame::LockedObjectMovement() {
 			lockedObject->GetPhysicsObject()->AddForce(-fwdAxis * force);
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM9)) {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD2)) {
 			lockedObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD8)) {
+			lockedObject->GetPhysicsObject()->AddForce(Vector3(0, 10, 0));
 		}
 	}
 
@@ -613,25 +734,22 @@ void TutorialGame::DebugObjectMovement() {
 		//Debug::DrawLine(Vector3(0, 10, 0), Vector3(0, 10, 0.3f * 3), Vector4(1, 0, 0, 1));  //line from initial camera pos to object
 
 		//Twist the selected object!
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD8)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD2)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD4)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD6)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
@@ -641,8 +759,16 @@ void TutorialGame::DebugObjectMovement() {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
 		}
 
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 50, 0));
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(-10, 0, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(10, 0, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUMPAD5)) {
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 10, 0));
 		}
 	}
 
@@ -661,7 +787,6 @@ void TutorialGame::MovePlayer() {
 	fwdAxis.Normalise();
 
 	Vector3 charForward = player->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-
 	float force = 200;
 
 	if (physics->slowfloorP == true) {
@@ -682,6 +807,15 @@ void TutorialGame::MovePlayer() {
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
 		player->GetPhysicsObject()->AddForce(-fwdAxis * force);
+	}
+
+
+	//rotate player
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM1)) {
+		player->GetPhysicsObject()->AddTorque(Vector3(0, 20, 0));
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM3)) {
+		player->GetPhysicsObject()->AddTorque(Vector3(0, -20, 0));
 	}
 
 
@@ -775,6 +909,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 
 	Vector3 floorSize = Vector3(100, 2, 100);
 	AABBVolume* volume = new AABBVolume(floorSize);
+	//OBBVolume* volume = new OBBVolume(floorSize);
 	floor->SetBoundingVolume((CollisionVolume*)volume);
 	floor->GetTransform()
 		.SetScale(floorSize * 2)
@@ -855,6 +990,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfH
 
 	capsule->GetPhysicsObject()->SetInverseMass(inverseMass);
 	capsule->GetPhysicsObject()->InitCubeInertia();
+	capsule->GetPhysicsObject()->SetCRes(0.3);
 
 	capsule->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
@@ -911,7 +1047,7 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 
 			if (rand() % 2) {
 				//AddCubeToWorld(position, cubeDims);
-				AddCapsuleToWorld(position, 0.85f * 3, 0.3f * 3);
+				AddCapsuleToWorld(position, 0.85f * 3, 0.3f * 3, 1.0);
 			}
 			else {
 				//AddCapsuleToWorld(position, 0.85f*3, 0.3f*3);
@@ -939,7 +1075,7 @@ void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 5, 0));
 	AddEnemyToWorld(Vector3(5, 5, 0));
 
-	bonus.push_back(AddBonusToWorld(Vector3(10, 5, 0)));	
+	bonus.push_back(AddBonusToWorld(Vector3(10, 5, 0)));
 	bonus.push_back(AddBonusToWorld(Vector3(20, 5, 0)));
 
 	AddBonusBall(Vector3(50, 5, 50));
@@ -957,8 +1093,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	///////GameObject* character = new GameObject();
 	player = new GameObject();
 
-	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.85f, 0.3f) * meshSize);
-	//CapsuleVolume* volume = new CapsuleVolume(0.85f *meshSize, 0.3f*meshSize);
+	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.85f, 0.3f) * meshSize);
+	CapsuleVolume* volume = new CapsuleVolume(0.85f *meshSize, 0.3f*meshSize);
 
 	player->SetBoundingVolume((CollisionVolume*)volume);
 
@@ -1273,7 +1409,7 @@ void TutorialGame::PrintDebugInfo() {
 	std::string forceInfo = "Force: (" + std::to_string(selectionObject->GetPhysicsObject()->GetForce().x) + "," + std::to_string(selectionObject->GetPhysicsObject()->GetForce().y) + "," + std::to_string(selectionObject->GetPhysicsObject()->GetForce().z) + ')';
 	std::string massInfo = "Inverse Mass: " + std::to_string(selectionObject->GetPhysicsObject()->GetInverseMass());
 	std::string cresInfo = "Coeff of Res: " + std::to_string(selectionObject->GetPhysicsObject()->GetCRes());
-	std::string aiStateInfo = "AI State: ";/////////////////////////////
+	std::string colVol = "CollisionVolume: " + selectionObject->GetPhysicsObject()->PrintColVol((selectionObject->GetPhysicsObject()->GetCollisionVolume()));
 	std::string worldIDInfo = "WorldID: " + std::to_string(selectionObject->GetWorldID());
 	std::string colType = "CollisionType: " + selectionObject->GetPhysicsObject()->ToString(selectionObject->GetPhysicsObject()->GetCollisionType());
 	std::string isActiveinfo = "IsActive: " + std::to_string(selectionObject->IsActive());
@@ -1283,7 +1419,7 @@ void TutorialGame::PrintDebugInfo() {
 	debugInfos[3] = forceInfo;
 	debugInfos[4] = massInfo;
 	debugInfos[5] = cresInfo;
-	debugInfos[6] = aiStateInfo;
+	debugInfos[6] = colVol;
 	debugInfos[7] = worldIDInfo;
 	debugInfos[8] = colType;
 	debugInfos[9] = isActiveinfo;
@@ -1342,9 +1478,9 @@ void TutorialGame::TestPathfinding() {
 
 	NavigationPath outPath; //making path 
 
-	Vector3 startPos(80, 0, 10);
+	Vector3 startPos(80, 0, 10); //(0,0,-70)
 
-	Vector3 endPos(160, 0, 160);
+	Vector3 endPos(160, 0, 160); //(80.0,80)
 
 	bool found = grid.FindPath(startPos, endPos, outPath); //finding path and putting it into outPath
 
@@ -1374,14 +1510,14 @@ void TutorialGame::InitBehavTreeExample() {
 	behavCoins.clear();
 
 	int randomNo = rand() % 2;
-	int genX=0;
-	int genZ=0;
-	int tempX =0;
-	int tempZ=0;
+	int genX = 0;
+	int genZ = 0;
+	int tempX = 0;
+	int tempZ = 0;
 
 	switch (randomNo) {
 
-	case 0: 
+	case 0:
 		spawnedCoins = false;
 		break;
 	case 1:
@@ -1390,7 +1526,7 @@ void TutorialGame::InitBehavTreeExample() {
 		tempX = genX;
 		tempZ = genZ;
 
-		behavCoins.push_back(AddBehavCoin("redCoin", Vector4(1, 0, 0, 1), Vector3(genX, 5, genZ)));
+		behavCoins.push_back(AddBehavCoin("redCoin", Vector4(1, 0, 0, 1), Vector3(genX, 11, genZ)));
 
 		genX = rand() % 21 + 70;
 		genZ = rand() % (-41) + (-50);
@@ -1403,7 +1539,7 @@ void TutorialGame::InitBehavTreeExample() {
 
 		break;
 	}
-	
+
 }
 
 GameObject* TutorialGame::AddBehavCoin(string name, Vector4 colour, Vector3 position) {
@@ -1436,7 +1572,7 @@ GameObject* TutorialGame::AddBehavCoin(string name, Vector4 colour, Vector3 posi
 }
 
 //Behaviour Tree example - AI can only take 1 item and takes closest one
-void TutorialGame::TestBehaviourTree(float time) { 
+void TutorialGame::TestBehaviourTree(float time) {
 
 	float decider;
 	bool getRed = false;
@@ -1463,7 +1599,7 @@ void TutorialGame::TestBehaviourTree(float time) {
 			state = BehaviourState::Ongoing;
 		}
 
-		 else if (state == BehaviourState::Ongoing) {
+		else if (state == BehaviourState::Ongoing) {
 			if (spawnedCoins == true) {
 				std::cout << "See Coins!\n";
 				return BehaviourState::Success;
@@ -1496,7 +1632,7 @@ void TutorialGame::TestBehaviourTree(float time) {
 				return BehaviourState::Failure;
 			}
 		}
-		return state; 
+		return state;
 		}
 	);
 
@@ -1553,7 +1689,7 @@ void TutorialGame::TestBehaviourTree(float time) {
 	if (state == BehaviourState::Success) {
 		float force = 100;
 		Vector3 direction;
-		std::string colour; 
+		std::string colour;
 
 		if (getRed == true) {
 			direction = rCoinPos - coinMinerPos;
@@ -1564,7 +1700,7 @@ void TutorialGame::TestBehaviourTree(float time) {
 			colour = "BLUE";
 		}
 
-		coinMinerAI->GetPhysicsObject()->AddForce(direction* force);
+		coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
 		std::cout << "Success Behaviour Tree - got " << colour << " coin!\n";
 	}
 

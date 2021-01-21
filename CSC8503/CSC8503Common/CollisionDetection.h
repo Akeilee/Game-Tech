@@ -57,9 +57,6 @@ namespace NCL {
 			}
 		};
 
-		static bool SphereCapsuleIntersection(
-			const CapsuleVolume& volumeA, const Transform& worldTransformA,
-			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 		//TODO ADD THIS PROPERLY
 		static bool RayBoxIntersection(const Ray& r, const Vector3& boxPos, const Vector3& boxSize, RayCollision& collision);
@@ -76,6 +73,8 @@ namespace NCL {
 
 
 		static bool RayPlaneIntersection(const Ray& r, const Plane& p, RayCollision& collisions);
+
+		static bool PlaneSphereIntersection(const SphereVolume& volumeA, const Plane& p, const Transform& worldTransform, CollisionInfo& collisionInfo);
 
 		static bool	AABBTest(const Vector3& posA, const Vector3& posB, const Vector3& halfSizeA, const Vector3& halfSizeB);
 
@@ -100,6 +99,19 @@ namespace NCL {
 		static Vector3		UnprojectScreenPosition(Vector3 position, float aspect, float fov, const Camera& c);
 		static Matrix4		GenerateInverseProjection(float aspect, float fov, float nearPlane, float farPlane);
 		static Matrix4		GenerateInverseView(const Camera& c);
+
+
+		static bool SphereCapsuleIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
+			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool AABBCapsuleIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
+			const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool OBBCapsuleIntersection(const OBBVolume& volumeA, const Transform& worldTransformA, 
+			const CapsuleVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA, 
+			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 	protected:
 

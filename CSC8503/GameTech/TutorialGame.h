@@ -32,6 +32,8 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+			void PlaneBonusIntersection();
+
 			void TextOnScreen(float dt);
 
 
@@ -39,7 +41,7 @@ namespace NCL {
 
 			void EnemyAI(float dt);
 
-			void OppositeForce();
+			void FallenOffStage();
 
 			vector <Vector3> testNodes;
 			vector <Vector3> testNodeCopy;
