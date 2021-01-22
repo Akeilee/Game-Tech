@@ -33,6 +33,8 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g) {
 	eBonusAdd = false;
 	slowfloorP = false;
 	slowfloorE = false;
+	fastFloorP = false;
+	fastFloorE = false;
 	collectedBonusBall = false;
 	enemy1 = false;
 	player1 = false;
@@ -282,22 +284,34 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	if (a.GetName() == "player" && (b.GetName() == "floor") || b.GetName() == "player" && (a.GetName() == "floor")) { ///////////
 		jump = true;
 		slowfloorP = false;
+		fastFloorP = false;
+		jumpforce = false;
 	}
 
+	//jumppad
 	if ((a.GetName() == "player" && b.GetName() == "jumppad" ) || (b.GetName() == "player" && a.GetName() == "jumppad")) {
 		jump = true;
 		jumpforce = true;
 	}
 
-	//slow floor
+	//slow floor and fast floor
 	if (a.GetName() == "player" && (b.GetName() == "slowfloor") || b.GetName() == "player" && (a.GetName() == "slowfloor")) { 
 		slowfloorP = true;
+		jumpforce = false;
 	}
 	if (a.GetName() == "enemy" && (b.GetName() == "slowfloor") || b.GetName() == "enemy" && (a.GetName() == "slowfloor")) {
 		slowfloorE = true;
 	}
+	if (a.GetName() == "player" && (b.GetName() == "fastfloor") || b.GetName() == "player" && (a.GetName() == "fastfloor")) {
+		fastFloorP = true;
+		jumpforce = false;
+	}
+	if (a.GetName() == "enemy" && (b.GetName() == "fastfloor") || b.GetName() == "enemy" && (a.GetName() == "fastfloor")) {
+		fastFloorE = true;
+	}
 	if (a.GetName() == "enemy" && (b.GetName() == "floor") || b.GetName() == "enemy" && (a.GetName() == "floor")) {
 		slowfloorE = false;
+		fastFloorE = false;
 	}
 
 
@@ -306,10 +320,10 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 		b.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS && a.GetPhysicsObject()->GetCollisionType() == CollisionType::BEHAVAI) {
 
 		if (a.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS) {
-			a.SetIsActive(false);
+			//a.SetIsActive(false);
 		}
 		if (b.GetPhysicsObject()->GetCollisionType() == CollisionType::BONUS) {
-			b.SetIsActive(false);
+			//b.SetIsActive(false);
 		}
 	}
 

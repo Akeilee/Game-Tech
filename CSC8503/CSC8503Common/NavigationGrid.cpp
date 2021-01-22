@@ -13,6 +13,10 @@ const int BOTTOM_NODE = 3;
 
 const char WALL_NODE = 'x';
 const char FLOOR_NODE = '.';
+const char COST_4 = '#';
+const char COST_3 = '*';
+const char COST_5 = '-';
+
 
 NavigationGrid::NavigationGrid() {
 	nodeSize = 0;
@@ -63,6 +67,15 @@ NavigationGrid::NavigationGrid(const std::string& filename) : NavigationGrid() {
 				if (n.connected[i]) {
 					if (n.connected[i]->type == '.') {
 						n.costs[i] = 1;
+					}
+					if (n.connected[i]->type == '#') {
+						n.costs[i] = 4;
+					}
+					if (n.connected[i]->type == '*') {
+						n.costs[i] = 3;
+					}
+					if (n.connected[i]->type == '-') {
+						n.costs[i] = 5;
 					}
 					if (n.connected[i]->type == 'x') {
 						n.connected[i] = nullptr; //actually a wall, disconnect!

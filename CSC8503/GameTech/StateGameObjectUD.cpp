@@ -1,4 +1,4 @@
-#include "StateGameObject.h"
+#include "StateGameObjectUD.h"
 #include "../CSC8503Common/StateTransition.h"
 #include "../CSC8503Common/StateMachine.h"
 #include "../CSC8503Common/State.h"
@@ -9,17 +9,17 @@ using namespace NCL;
 using namespace CSC8503;
 
 
-StateGameObject::StateGameObject() {
+StateGameObjectUD::StateGameObjectUD() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
 
 	State* stateA = new State([&](float dt)-> void {
-		this->MoveLeft(dt);
+		this->MoveUp(dt);
 		}
 	);
 
 	State* stateB = new State([&](float dt)-> void {
-		this->MoveRight(dt);
+		this->MoveDown(dt);
 		}
 	);
 
@@ -28,34 +28,34 @@ StateGameObject::StateGameObject() {
 
 	stateMachine->AddTransition(new StateTransition(stateA, stateB, [&]() -> bool {
 		return //this->counter > 6.0f;
-			this->GetTransform().GetPosition().x < -85;
+			this->GetTransform().GetPosition().z < 20;
 		}
 	));
 
 	stateMachine->AddTransition(new StateTransition(stateB, stateA, [&]() -> bool {
 		return //this->counter < 0.0f;
-			this->GetTransform().GetPosition().x > -65;
+			this->GetTransform().GetPosition().z > 55;
 		}
 	));
 }
 
 
-StateGameObject ::~StateGameObject() {
+StateGameObjectUD ::~StateGameObjectUD() {
 	delete stateMachine;
 }
 
 
-void StateGameObject::Update(float dt) {
+void StateGameObjectUD::Update(float dt) {
 	stateMachine->Update(dt);
 }
 
 
-void StateGameObject::MoveLeft(float dt) {
-	GetPhysicsObject()->AddForce({ -900, 0, 0 });
+void StateGameObjectUD::MoveUp(float dt) {
+	GetPhysicsObject()->AddForce({ 0, 0, -1000 });
 	counter += dt;
 }
 
-void StateGameObject::MoveRight(float dt) {
-	GetPhysicsObject()->AddForce({ 900, 0, 0 });
+void StateGameObjectUD::MoveDown(float dt) {
+	GetPhysicsObject()->AddForce({ 0, 0,1000 });
 	counter -= dt;
 }

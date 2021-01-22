@@ -2,6 +2,7 @@
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "StateGameObject.h"
+#include "StateGameObjectUD.h"
 #include "../CSC8503Common/BehaviourSequence.h"
 #include "../CSC8503Common/BehaviourAction.h"
 
@@ -31,6 +32,8 @@ namespace NCL {
 			~TutorialGame();
 
 			virtual void UpdateGame(float dt);
+
+			void Test(float dt);
 
 			void PlaneBonusIntersection();
 
@@ -72,9 +75,17 @@ namespace NCL {
 
 		protected:
 
-			GameObject* JumpPad();
+			GameObject* AddJumpPad(const Vector3& position, const Vector3& size);
 
 			GameObject* SlowFloor();
+
+			GameObject* FastFloor(const Vector3& position, const Vector3& size);
+
+			GameObject* FloatingFloor(const Vector3& position, const Vector3& size);
+
+			GameObject* OBBFloor(const Vector3& position, const Vector3& size);
+
+			void SpawnFallingObject(float dt);
 
 
 			void InitialiseAssets();
@@ -93,6 +104,8 @@ namespace NCL {
 			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
 			void InitDefaultFloor();
 			void BridgeConstraintTest();
+
+			void BallConstraint();
 
 			bool SelectObject();
 			void PrintDebugInfo();
@@ -122,6 +135,9 @@ namespace NCL {
 			//tut9
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
 			StateGameObject* testStateObject;
+
+			StateGameObjectUD* AddUpDownState(const Vector3& position);
+			StateGameObjectUD* upDownStateObject;
 
 
 			GameTechRenderer* renderer;
@@ -155,20 +171,28 @@ namespace NCL {
 			}
 
 
-
+			float enemytimer;
+			float enemyAITimer;
 			float timer;
 			float decreaseScore;
+			float spawntimer;
+			float delSpawns;
+			float coinCounter = 0;
+			float behavTimer;
+			vector<GameObject*> fallingSpawns;
 			int playerScore;
 			int enemyScore;
-
+			
 			bool loseGame;
 			bool winGame;
 			bool once;
 			bool movePlayer;
-			float enemytimer;
+			bool displayPath;
 
 			GameObject* apple;
 			GameObject* bonusBall;
+			GameObject* movingSphere;
+			vector<GameObject*> pingpong;
 			bool practiceMode;
 
 			EnemyState enemyState;
@@ -177,6 +201,7 @@ namespace NCL {
 			GameObject* behavCoin;
 			vector<GameObject*> behavCoins;
 			vector<GameObject*> bonus;
+			vector<GameObject*> bonusCopy;
 
 			bool spawnedCoins;
 

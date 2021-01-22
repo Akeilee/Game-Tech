@@ -36,6 +36,8 @@ namespace NCL {
 			bool jumpforce;
 			bool slowfloorP;
 			bool slowfloorE;
+			bool fastFloorP;
+			bool fastFloorE;
 			bool collectedBonusBall;
 			bool enemy1;
 			bool player1;
@@ -75,6 +77,7 @@ namespace NCL {
 
 			bool pBonusAdd;
 			bool eBonusAdd;
+			
 
 		};
 	}
