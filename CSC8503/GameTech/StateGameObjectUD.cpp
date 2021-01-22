@@ -34,7 +34,7 @@ StateGameObjectUD::StateGameObjectUD() {
 
 	stateMachine->AddTransition(new StateTransition(stateB, stateA, [&]() -> bool {
 		return //this->counter < 0.0f;
-			this->GetTransform().GetPosition().z > 55;
+			this->GetTransform().GetPosition().z > 35;
 		}
 	));
 }

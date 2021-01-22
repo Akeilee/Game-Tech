@@ -136,7 +136,7 @@ void PhysicsSystem::Update(float dt) {
 	if (updateTime > realDT) {
 		realHZ /= 2;
 		realDT *= 2;
-		std::cout << "Dropping iteration count due to long physics time...(now " << realHZ << ")\n";
+		//std::cout << "Dropping iteration count due to long physics time...(now " << realHZ << ")\n";
 	}
 	else if (dt * 2 < realDT) { //we have plenty of room to increase iteration count!
 		int temp = realHZ;
@@ -148,7 +148,7 @@ void PhysicsSystem::Update(float dt) {
 			realDT = idealDT;
 		}
 		if (temp != realHZ) {
-			std::cout << "Raising iteration count due to short physics time...(now " << realHZ << ")\n";
+			//std::cout << "Raising iteration count due to short physics time...(now " << realHZ << ")\n";
 		}
 	}
 }
@@ -255,23 +255,23 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	//deleteing coin if collected
 	if (a.GetName() == "bonus" && b.GetName() == "player") {
 		pBonusAdd = true;
-		a.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 1000, 0));
+		a.GetRenderObject()->GetTransform()->SetPosition(Vector3(1000, 1000, 1000));
 		a.SetIsActive(false);
 
 	}
 	else if (a.GetName() == "player" && b.GetName() == "bonus") {
 		pBonusAdd = true;
-		b.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 900, 0));
+		b.GetRenderObject()->GetTransform()->SetPosition(Vector3(1000, 900, 900));
 		b.SetIsActive(false);
 	}
 	else if (a.GetName() == "bonus" && b.GetName() == "enemy") {
 		eBonusAdd = true;
-		a.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 1000, 0));
+		a.GetRenderObject()->GetTransform()->SetPosition(Vector3(900, 1000, 800));
 		a.SetIsActive(false);
 	}
 	else if (a.GetName() == "enemy" && b.GetName() == "bonus") {
 		eBonusAdd = true;
-		b.GetRenderObject()->GetTransform()->SetPosition(Vector3(0, 900, 0));
+		b.GetRenderObject()->GetTransform()->SetPosition(Vector3(700, 900, 800));
 		b.SetIsActive(false);
 	}
 

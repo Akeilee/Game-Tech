@@ -22,42 +22,12 @@ namespace NCL {
 		public:
 			TutorialGame();
 
-
 			void LoseGame(float dt);
-
 			void WinGame(float dt);
-
-
 
 			~TutorialGame();
 
 			virtual void UpdateGame(float dt);
-
-			void Test(float dt);
-
-			void PlaneBonusIntersection();
-
-			void TextOnScreen(float dt);
-
-
-
-
-			void EnemyAI(float dt);
-
-			void FallenOffStage();
-
-			vector <Vector3> testNodes;
-			vector <Vector3> testNodeCopy;
-			void TestPathfinding();
-			void DisplayPathfinding();
-
-			void InitBehavTreeExample();
-
-			GameObject* AddBehavCoin(string name, Vector4 colour, Vector3 position);
-
-			void TestBehaviourTree(float dt);
-
-
 
 			void SetPracticeMode(bool p) {
 				practiceMode = p;
@@ -75,18 +45,30 @@ namespace NCL {
 
 		protected:
 
+			void CoinMineMovement(float dt);
+			void PlaneBonusIntersection();
+			void TextOnScreen(float dt);
+			void EnemyAI(float dt);
+			void FallenOffStage();
+
+			vector <Vector3> testNodes;
+			vector <Vector3> testNodeCopy;
+			void TestPathfinding();
+			void DisplayPathfinding();
+
+			void InitBehavTreeExample();
+
+			GameObject* AddBehavCoin(string name, Vector4 colour, Vector3 position);
+
+			void TestBehaviourTree(float dt);
+
 			GameObject* AddJumpPad(const Vector3& position, const Vector3& size);
-
 			GameObject* SlowFloor();
-
 			GameObject* FastFloor(const Vector3& position, const Vector3& size);
-
 			GameObject* FloatingFloor(const Vector3& position, const Vector3& size);
-
 			GameObject* OBBFloor(const Vector3& position, const Vector3& size);
 
 			void SpawnFallingObject(float dt);
-
 
 			void InitialiseAssets();
 
@@ -188,6 +170,8 @@ namespace NCL {
 			bool once;
 			bool movePlayer;
 			bool displayPath;
+			bool testBehavOnce;
+			bool goToCoin;
 
 			GameObject* apple;
 			GameObject* bonusBall;
@@ -201,11 +185,13 @@ namespace NCL {
 			GameObject* behavCoin;
 			vector<GameObject*> behavCoins;
 			vector<GameObject*> bonus;
-			vector<GameObject*> bonusCopy;
 
 			bool spawnedCoins;
 
 			bool restart;
+			bool turnOnAI;
+			Vector3 coinPos;
+			bool getCoin;
 		};
 	}
 }

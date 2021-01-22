@@ -57,8 +57,11 @@ TutorialGame::TutorialGame() {
 	winGame = false;
 	once = false;
 	movePlayer = false;
-	enemytimer = 0;
 	practiceMode = false;
+	testBehavOnce = false;
+	goToCoin = false;
+	turnOnAI = false;
+	getCoin = false;
 
 	enemyState = EnemyState::IDLE;
 	spawnedCoins = false;
@@ -69,74 +72,6 @@ TutorialGame::TutorialGame() {
 	InitialiseAssets();
 }
 
-
-
-void TutorialGame::LoseGame(float dt) {
-
-	if (playerScore <= 0 && once == false) {
-
-		world = new GameWorld();
-		renderer = new GameTechRenderer(*world);
-		loseGame = true;
-		once = true;
-		playerScore = 0;
-
-		if (physics->enemy1 == true && physics->collectedBonusBall == true) {
-			enemyScore += 1000;
-			std::cout << "Enemy gets bonus score of 1000\n";
-		}
-	}
-
-	if (once == true && loseGame == true) {
-		renderer->DrawString("YOU LOSE!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
-		renderer->DrawString("Your Score: " + std::to_string(playerScore), Vector2(10, 40), 40);
-		renderer->DrawString("Player 2 Score: " + std::to_string(enemyScore), Vector2(10, 50), 40);
-		renderer->DrawString("R to restart game", Vector2(10, 70), 30);
-		renderer->DrawString("Esc to go back to main menu", Vector2(10, 80), 30);
-		//renderer->Update(dt);
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
-		restart = true;
-	}
-
-}
-
-void TutorialGame::WinGame(float dt) {
-
-	float offset = 10.0f;
-	if (player->GetTransform().GetPosition().x <= 0 + offset && player->GetTransform().GetPosition().x >= 0 - offset &&
-		player->GetTransform().GetPosition().z <= -90 + offset && player->GetTransform().GetPosition().z >= -90 - offset) {
-
-		if (playerScore > 0 && once == false) {
-			world = new GameWorld();
-			renderer = new GameTechRenderer(*world);
-			winGame = true;
-			once = true;
-
-			if (physics->player1 == true && physics->collectedBonusBall == true) {
-				playerScore += 1000;
-				std::cout << "Player gets bonus score of 1000\n";
-			}
-			if (physics->enemy1 == true && physics->collectedBonusBall == true) {
-				enemyScore += 1000;
-				std::cout << "Enemy gets bonus score of 1000\n";
-			}
-		}
-
-		if (once == true && winGame == true) {
-			renderer->DrawString("YOU WIN!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
-			renderer->DrawString("Your Score: " + std::to_string(playerScore), Vector2(10, 40), 40);
-			renderer->DrawString("Player 2 Score: " + std::to_string(enemyScore), Vector2(10, 50), 40);
-			renderer->DrawString("R to restart game", Vector2(10, 70), 30);
-			renderer->DrawString("Esc to go back to main menu", Vector2(10, 80), 30);
-			//renderer->Update(dt);
-		}
-
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
-			restart = true;
-		}
-	}
-}
 
 /*
 
@@ -152,7 +87,7 @@ void TutorialGame::InitialiseAssets() {
 		(*into)->UploadToGPU();
 	};
 
-	if (practiceMode) {
+	if (!practiceMode) {
 		useGravity = true;
 		physics->UseGravity(useGravity);
 	}
@@ -271,23 +206,28 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 
 
-	if (!practiceMode) {
+	if (!practiceMode || (practiceMode && turnOnAI == true)) {
 		EnemyAI(dt); //enemy only moves in game mode
+
+		behavTimer += dt;
+		if (behavTimer < 5) {
+			CoinMineMovement(dt);
+		}
+
+		if (behavTimer >= 6 && testBehavOnce == false) {
+			coinMinerAI->GetPhysicsObject()->ClearForces();
+			TestBehaviourTree(dt);
+			testBehavOnce = true;
+		}
+		if (behavTimer >= 9) {
+			testBehavOnce = false;
+			behavTimer = 0;
+		}
 	}
 
-
-	behavTimer += dt;
-	if (behavTimer >= 5) {
-		TestBehaviourTree(dt);
-		behavTimer = 0;
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM9)) {
+		turnOnAI = !turnOnAI;
 	}
-	else if (behavTimer < 5) {
-		Test(dt);
-	}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM9)) {
-
-	//}
 
 	//spinning coins
 	for (auto i : bonus) {
@@ -301,7 +241,6 @@ void TutorialGame::UpdateGame(float dt) {
 	SpawnFallingObject(dt);
 
 
-
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 
@@ -311,72 +250,76 @@ void TutorialGame::UpdateGame(float dt) {
 }
 
 
-void TutorialGame::Test(float dt) {
+void TutorialGame::LoseGame(float dt) {
 
-	enemyAITimer += dt;
-	Vector3 coinPos;
-	Vector3 coinMinerPos = coinMinerAI->GetTransform().GetPosition();
-	float offset = 6;
-	float force = 100;
+	if (playerScore <= 0 && once == false) {
 
-	if (physics->slowfloorE == true) {
-		force = 20;
-	}
-	if (physics->fastFloorE == true) {
-		force = 250.0f;
-	}
+		world = new GameWorld();
+		renderer = new GameTechRenderer(*world);
+		loseGame = true;
+		once = true;
+		playerScore = 0;
 
-
-	if (coinMinerPos.x < testNodeCopy.back().x + offset && coinMinerPos.x > testNodeCopy.back().x - offset &&
-		coinMinerPos.z < testNodeCopy.back().z + offset && coinMinerPos.z > testNodeCopy.back().z - offset && enemyAITimer < 5) {
-		coinMinerPos.y = 0;
-
-		if (testNodeCopy.size() >= 2) {
-			testNodeCopy.pop_back();
+		if (physics->enemy1 == true && physics->collectedBonusBall == true) {
+			enemyScore += 1000;
+			std::cout << "Enemy gets bonus score of 1000\n";
 		}
-		enemyAITimer = 0;
 	}
 
-	if ((enemyAITimer >= 5 && physics->slowfloorE == false) || (enemyAITimer >= 10 && physics->slowfloorE == true)) { //recalculate path
-		testNodeCopy.clear();
-		Vector3 tempPos = Vector3(coinMinerPos.x + 95, coinMinerPos.y, coinMinerPos.z + 95);
-		NavigationPath path;
-		NavigationGrid grid("TestGrid1.txt");
-		bool found = grid.FindPath(Vector3(95, 0, 5), tempPos, path);
-
-		Vector3 pos;
-		while (path.PopWaypoint(pos)) {
-			testNodeCopy.push_back(pos);
-		}
-
-		if (!found || enemyAITimer > 10) {
-			testNodeCopy.clear();
-			std::cout << "Stuck, teleporting near player!\n";
-			coinMinerAI->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5, 0, 5));
-			tempPos = Vector3(coinMinerAI->GetTransform().GetPosition().x + 95, coinMinerAI->GetTransform().GetPosition().y, coinMinerAI->GetTransform().GetPosition().z + 95);
-			found = grid.FindPath(Vector3(95, 0, 5), tempPos, path);
-
-			while (path.PopWaypoint(pos)) {
-				testNodeCopy.push_back(pos);
-			}
-
-		}
-
-		if (found) {
-			std::cout << "Recalculating Path\n";
-			DisplayPathfinding();
-		}
-
-
-		enemyAITimer = 0;
+	if (once == true && loseGame == true) {
+		renderer->DrawString("YOU LOSE!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
+		renderer->DrawString("Your Score: " + std::to_string(playerScore), Vector2(10, 40), 40);
+		renderer->DrawString("Player 2 Score: " + std::to_string(enemyScore), Vector2(10, 50), 40);
+		renderer->DrawString("R to restart game", Vector2(10, 70), 30);
+		renderer->DrawString("Esc to go back to main menu", Vector2(10, 80), 30);
+		renderer->Update(dt);
+		world->UpdateWorld(dt);
 	}
-
-	Vector3 direction = testNodeCopy.back() - coinMinerPos;
-	direction.Normalise();
-	coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
-	enemyAITimer = 0;
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
+		restart = true;
+	}
 
 }
+
+void TutorialGame::WinGame(float dt) {
+
+	float offset = 10.0f;
+	if (player->GetTransform().GetPosition().x <= 0 + offset && player->GetTransform().GetPosition().x >= 0 - offset &&
+		player->GetTransform().GetPosition().z <= -90 + offset && player->GetTransform().GetPosition().z >= -90 - offset) {
+
+		if (playerScore > 0 && once == false) {
+			world = new GameWorld();
+			renderer = new GameTechRenderer(*world);
+			winGame = true;
+			once = true;
+
+			if (physics->player1 == true && physics->collectedBonusBall == true) {
+				playerScore += 1000;
+				std::cout << "Player gets bonus score of 1000\n";
+			}
+			if (physics->enemy1 == true && physics->collectedBonusBall == true) {
+				enemyScore += 1000;
+				std::cout << "Enemy gets bonus score of 1000\n";
+			}
+		}
+
+		if (once == true && winGame == true) {
+			renderer->DrawString("YOU WIN!", Vector2(40, 20), 50, Vector4(0.9, 0.1, 0.6, 1));
+			renderer->DrawString("Your Score: " + std::to_string(playerScore), Vector2(10, 40), 40);
+			renderer->DrawString("Player 2 Score: " + std::to_string(enemyScore), Vector2(10, 50), 40);
+			renderer->DrawString("R to restart game", Vector2(10, 70), 30);
+			renderer->DrawString("Esc to go back to main menu", Vector2(10, 80), 30);
+			renderer->Update(dt);
+			world->UpdateWorld(dt);
+		}
+
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
+			restart = true;
+		}
+	}
+}
+
+
 
 void TutorialGame::PlaneBonusIntersection() {
 	Vector3 plane = Vector3(0, -20, 0);
@@ -746,6 +689,7 @@ void TutorialGame::SpawnFallingObject(float dt) {
 	if (delSpawns >= 60 && !fallingSpawns.empty()) {
 		for (auto i : fallingSpawns) {
 			if (i == fallingSpawns.front()) {
+				//i->GetTransform().SetPosition(Vector3(800, 600, 500));
 				i->SetIsActive(false);
 			}
 		}
@@ -760,35 +704,39 @@ void TutorialGame::EnemyAI(float dt) {
 	enemytimer += dt;
 	float offset = 6;
 	Vector3 enemyPos = enemy->GetTransform().GetPosition();
-	float force = 100;
+	float force = 70;
 
 	if (physics->slowfloorE == true) {
-		force = 20;
+		force = 50;
 	}
 	if (physics->fastFloorE == true) {
 		force = 250.0f;
 	}
 
 	//going for coin
-	float coinDistance = 10;
-	if (enemyPos.x - coinDistance <= apple->GetTransform().GetPosition().x && enemyPos.x + coinDistance >= apple->GetTransform().GetPosition().x &&
-		enemyPos.z - coinDistance <= apple->GetTransform().GetPosition().z && enemyPos.z + coinDistance >= apple->GetTransform().GetPosition().z &&
-		apple->GetTransform().GetPosition().y < 20 && apple->GetTransform().GetPosition().y > 0) {
-		Vector3 direction = apple->GetTransform().GetPosition() - enemyPos;
-		direction.Normalise();
-		enemy->GetPhysicsObject()->AddForce(direction * force);
-		//std::cout << "Going after coin\n";
+	float coinDistance = 15;
+	for (auto i : bonus) {
+		if ((enemyPos.x - coinDistance <= i->GetTransform().GetPosition().x && enemyPos.x + coinDistance >= i->GetTransform().GetPosition().x &&
+			enemyPos.z - coinDistance <= i->GetTransform().GetPosition().z && enemyPos.z + coinDistance >= i->GetTransform().GetPosition().z)) {
+			Vector3 coinPos = i->GetTransform().GetPosition();
+			Vector3 direction = Vector3(coinPos.x, 0, coinPos.z) - enemyPos;
+			direction.Normalise();
+			enemy->GetPhysicsObject()->AddForce(direction * force*3);
+			//std::cout << "Going after coin\n";
+			getCoin = true;
+		}
 	}
 
 
+
 	//going for bonusBall
-	coinDistance = 15;
 	if (physics->enemy1 == false && (enemyPos.x - coinDistance <= bonusBall->GetTransform().GetPosition().x && enemyPos.x + coinDistance >= bonusBall->GetTransform().GetPosition().x &&
 		enemyPos.z - coinDistance <= bonusBall->GetTransform().GetPosition().z && enemyPos.z + coinDistance >= bonusBall->GetTransform().GetPosition().z)) {
 		Vector3 direction = bonusBall->GetTransform().GetPosition() - enemyPos;
 		direction.Normalise();
 		enemy->GetPhysicsObject()->AddForce(direction * force);
-		//std::cout << "Going after bonusBall\n";
+		std::cout << "Going after bonusBall\n";
+		physics->enemy1 = true;
 	}
 
 
@@ -803,7 +751,7 @@ void TutorialGame::EnemyAI(float dt) {
 			enemytimer = 0;
 		}
 
-		if ((enemytimer >= 5 && physics->slowfloorE == false) || (enemytimer >= 10 && physics->slowfloorE == true)) { //recalculate path
+		if (enemytimer >= 5) { //recalculate path
 			testNodes.clear();
 			Vector3 tempPos = Vector3(enemyPos.x + 95, enemyPos.y, enemyPos.z + 95);
 			NavigationPath path;
@@ -815,7 +763,8 @@ void TutorialGame::EnemyAI(float dt) {
 				testNodes.push_back(pos);
 			}
 
-			if (!found || enemytimer > 10) {
+			if ((enemytimer >5.5 && physics->slowfloorE == false && getCoin == false) || !found  ) {
+			//if ((enemytimer >8  && getCoin == false) || enemytimer > 20||!found  ) {
 				testNodes.clear();
 				std::cout << "Stuck, teleporting near player!\n";
 				enemy->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5, 0, 5));
@@ -830,6 +779,7 @@ void TutorialGame::EnemyAI(float dt) {
 
 			if (found) {
 				std::cout << "Recalculating Path\n";
+				enemy->GetTransform().SetPosition(Vector3(enemyPos.x, 4, enemyPos.z));
 				DisplayPathfinding();
 			}
 
@@ -840,23 +790,94 @@ void TutorialGame::EnemyAI(float dt) {
 		Vector3 direction = testNodes.back() - enemyPos;
 		direction.Normalise();
 		enemy->GetPhysicsObject()->AddForce(direction * force);
-		enemytimer = 0;
+		
+	}
 
+	getCoin = false;
+}
+
+void TutorialGame::CoinMineMovement(float dt) {
+
+	enemyAITimer += dt;
+	coinPos;
+	Vector3 coinMinerPos = coinMinerAI->GetTransform().GetPosition();
+	float offset = 6;
+	float force = 75;
+
+	if (physics->slowfloorE == true) {
+		force = 45;
+	}
+	if (physics->fastFloorE == true) {
+		force = 250.0f;
 	}
 
 
+	if (goToCoin == true) {
+		Vector3 direction;
+
+		direction = coinPos - coinMinerPos;
+		direction.Normalise();
+		coinMinerAI->GetPhysicsObject()->AddForce(direction * force*2);
+		goToCoin = false;
+	}
+
+	else {
+		if (coinMinerPos.x < testNodeCopy.back().x + offset && coinMinerPos.x > testNodeCopy.back().x - offset &&
+			coinMinerPos.z < testNodeCopy.back().z + offset && coinMinerPos.z > testNodeCopy.back().z - offset && enemyAITimer < 5) {
+			coinMinerPos.y = 0;
+
+			if (testNodeCopy.size() >= 2) {
+				testNodeCopy.pop_back();
+			}
+			enemyAITimer = 0;
+		}
+
+		if ((enemyAITimer >= 4 && physics->slowfloorE == false) || (enemyAITimer >= 4 && physics->slowfloorE == true)) { //recalculate path
+			testNodeCopy.clear();
+			Vector3 tempPos = Vector3(coinMinerPos.x + 95, coinMinerPos.y, coinMinerPos.z + 95);
+			NavigationPath path;
+			NavigationGrid grid("TestGrid1.txt");
+			bool found = grid.FindPath(Vector3(95, 0, 5), tempPos, path);
+
+			Vector3 pos;
+			while (path.PopWaypoint(pos)) {
+				testNodeCopy.push_back(pos);
+			}
+
+			if (!found || enemyAITimer > 4) {
+				testNodeCopy.clear();
+				//std::cout << "Stuck, teleporting near player!\n";
+				coinMinerAI->GetTransform().SetPosition(player->GetTransform().GetPosition() + Vector3(5, 0, 5));
+				tempPos = Vector3(coinMinerAI->GetTransform().GetPosition().x + 95, coinMinerAI->GetTransform().GetPosition().y, coinMinerAI->GetTransform().GetPosition().z + 95);
+				found = grid.FindPath(Vector3(95, 0, 5), tempPos, path);
+
+				while (path.PopWaypoint(pos)) {
+					testNodeCopy.push_back(pos);
+				}
+
+			}
+
+			if (found) {
+				//std::cout << "Recalculating Path\n";
+				coinMinerAI->GetTransform().SetPosition(Vector3(coinMinerPos.x, 4, coinMinerPos.z));
+				DisplayPathfinding();
+			}
+
+
+			enemyAITimer = 0;
+		}
+
+		Vector3 direction = testNodeCopy.back() - coinMinerPos;
+		direction.Normalise();
+		coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
+		enemyAITimer = 0;
+	}
 }
-
-
-
-
-
 
 
 void TutorialGame::UpdateKeys() {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
 		playerScore = 1000;
@@ -866,6 +887,9 @@ void TutorialGame::UpdateKeys() {
 		winGame = false;
 		once = false;
 		bonus.clear();
+		pingpong.clear();
+		fallingSpawns.clear();
+		InitWorld(); //We can reset the simulation at any time with F1
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -1184,7 +1208,7 @@ void TutorialGame::BridgeConstraintTest() {
 	Vector3 cubeSize = Vector3(10, 1.25, 5);
 
 	float invCubeMass = 5; // how heavy the middle pieces are
-	int numLinks = 4;
+	int numLinks = 6;
 	float maxDistance = 17; // constraint distance
 	float cubeDistance = 15; // distance between links
 
@@ -1461,7 +1485,7 @@ void TutorialGame::InitGameExamples() {
 	bonus.push_back(AddBonusToWorld(Vector3(-35, 24, -45)));
 
 	testStateObject = AddStateObjectToWorld(Vector3(-55, 0, 45));
-	upDownStateObject = AddUpDownState(Vector3(-45, 0, 50));
+	upDownStateObject = AddUpDownState(Vector3(-45, 0, 45));
 
 	pingpong.push_back(AddSphereToWorld(Vector3(-45, 2, -25), 4, 0));
 	pingpong.push_back(AddSphereToWorld(Vector3(-65, 2, -35), 4, 0));
@@ -1494,13 +1518,14 @@ void TutorialGame::InitGameExamples() {
 	bonus.push_back(AddBonusToWorld(Vector3(10, 5, -20)));
 	bonus.push_back(AddBonusToWorld(Vector3(-10, 5, -50)));
 
-	bonus.push_back(AddBonusToWorld(Vector3(0, 5, -70)));
+	bonus.push_back(AddBonusToWorld(Vector3(0, 5, -75)));
+	bonus.push_back(AddBonusToWorld(Vector3(30, 5, 70)));
 
 	//on bridge
-	bonus.push_back(AddBonusToWorld(Vector3(-5, 25, 35)));
-	bonus.push_back(AddBonusToWorld(Vector3(5, 25, 35)));
-	bonus.push_back(AddBonusToWorld(Vector3(-5, 25, -55)));
-	bonus.push_back(AddBonusToWorld(Vector3(5, 25, -55)));
+	//bonus.push_back(AddBonusToWorld(Vector3(-5, 25, 35)));
+	//bonus.push_back(AddBonusToWorld(Vector3(5, 25, 35)));
+	//bonus.push_back(AddBonusToWorld(Vector3(-5, 25, -55)));
+	//bonus.push_back(AddBonusToWorld(Vector3(5, 25, -55)));
 }
 
 
@@ -1976,7 +2001,6 @@ void TutorialGame::DisplayPathfinding() {
 }
 
 
-
 //Behaviour Tree
 void TutorialGame::InitBehavTreeExample() {
 	AddCoinMiner(Vector3(77, 5, 90));
@@ -2049,7 +2073,6 @@ GameObject* TutorialGame::AddBehavCoin(string name, Vector4 colour, Vector3 posi
 void TutorialGame::TestBehaviourTree(float time) {
 
 	float decider;
-	Vector3 coinPos;
 	Vector3 coinMinerPos = coinMinerAI->GetTransform().GetPosition();
 
 
@@ -2060,7 +2083,7 @@ void TutorialGame::TestBehaviourTree(float time) {
 		}
 
 		else if (state == BehaviourState::Ongoing) {
-			for (auto i : bonusCopy) {
+			for (auto i : bonus) {
 				if (i->IsActive() == true) {
 					std::cout << "Sense Coins!\n";
 					return BehaviourState::Success;
@@ -2107,24 +2130,16 @@ void TutorialGame::TestBehaviourTree(float time) {
 
 		else if (state == BehaviourState::Ongoing) {
 
-			for (auto i : bonusCopy) { //using raycasting to find coin
+			for (auto i : bonus) { //using raycasting to find coin
 
-				//Vector3 temp = Vector3(0, 0, 0);
 				float coinDist = 0;
 				Vector3 direction = Vector3(0, 0, 0);
 
-				if (i->GetTransform().GetPosition().y >= 20) {
-					delete bonusCopy[i];
-					break;
-				}
-				//else if (i->GetTransform().GetPosition().y <= 1) {
-				//	break;
-				//}
-				 if (i->IsActive() == false) {
-					break;
-				}
-
 				coinPos = i->GetTransform().GetPosition();
+
+				float coinDistance = 20;
+
+
 
 				//float tempLen = coinPos.Length();
 				//temp = coinPos;
@@ -2142,27 +2157,30 @@ void TutorialGame::TestBehaviourTree(float time) {
 				direction = coinPos - coinMinerPos;
 				//std::cout << temp;
 
-				if (coinDist <= 100) {
+				if (coinMinerPos.x - coinDistance <= coinPos.x && coinMinerPos.x + coinDistance >= coinPos.x &&
+					coinMinerPos.z - coinDistance <= coinPos.z && coinMinerPos.z + coinDistance >= coinPos.z &&
+					coinPos.y < 20 && coinPos.y > 0) {
+
 					std::cout << coinPos;
 					SphereVolume* sphVol = new SphereVolume(1.25f * 1.5);
 					RayCollision closestCollision;
 					Ray* ray = new Ray(coinMinerPos, direction);
-					Transform* t = new Transform();
-					t->SetOrientation(i->GetTransform().GetOrientation());
-					t->SetScale(i->GetTransform().GetScale());
-					t->SetPosition(coinPos);
 
-					Debug::DrawLine(coinMinerPos, coinPos, Debug::RED, 2.0f);
+					Debug::DrawLine(coinMinerPos, coinPos, Debug::RED, 5.0f);
 
-					if (CollisionDetection::RaySphereIntersection(*ray, *t, *sphVol, closestCollision)) {
+					if (CollisionDetection::RaySphereIntersection(*ray, i->GetTransform(), *sphVol, closestCollision)) {
+						std::cout << "Coin in sight using ray!\n";
+						coinCounter++;
+						return BehaviourState::Success;
+					}
+					if (CollisionDetection::RaySphereIntersection(*ray, i->GetTransform(), *sphVol, closestCollision) == false) {
 						std::cout << "Coin in sight!\n";
 						coinCounter++;
 						return BehaviourState::Success;
 					}
+					
 				}
 
-				std::cout << "No coins here...\n";
-				return BehaviourState::Failure;
 
 			}
 			std::cout << "No coins here...\n";
@@ -2212,23 +2230,12 @@ void TutorialGame::TestBehaviourTree(float time) {
 	}
 
 	if (state == BehaviourState::Success) {
-		float force = 100;
-		Vector3 direction;
-
-		if (physics->slowfloorE == true) {
-			force = 20;
-		}
-		if (physics->fastFloorE == true) {
-			force = 250.0f;
-		}
-
-		direction = coinPos - coinMinerPos;
-		coinMinerAI->GetPhysicsObject()->AddForce(direction * force);
-		std::cout << "Success Behaviour Tree - Trying to go for coin!\n";
+		goToCoin = true;
+		std::cout << "SUCCESS Behaviour Tree - Trying to go for coin!\n";
 	}
 
 	else if (state == BehaviourState::Failure) {
-		std::cout << "Fail Behaviour Tree - No coins looted\n";
+		std::cout << "FAIL Behaviour Tree - No coins looted\n";
 
 	}
 
