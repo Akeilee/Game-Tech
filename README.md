@@ -8,8 +8,8 @@ The main framework was provided by Dr Rich Davison and he has given permission t
 <br /><br />
 
 ### Short Demonstration Video
-[New Game mode]()<br />
-[Practice mode]()
+- [Practice mode](https://youtu.be/urHL-WkVB7w)<br />
+- [New Game mode](https://youtu.be/1s2tpDjuAH4)
 <br /><br />
 
 ### Screenshots
@@ -61,8 +61,8 @@ _The menu is made with a pushdown automata which is a stack of states. When a me
 <br /><br />
 
 ### Game Modes
-**- New Game :** Plays against AI. Loses when health drops to 0 and wins if crosses finish line with health more than 0.<br />
-**- Practice Mode :** Unlimited life and can test object collisions and movements.<br /><br />
+**- New Game :** _Plays against AI. Loses when health drops to 0 and wins if crosses finish line with health more than 0._<br />
+**- Practice Mode :** _Unlimited life and can test object collisions and movements._<br /><br />
 <br />
 
 ### Keybinds
@@ -82,8 +82,8 @@ _The menu is made with a pushdown automata which is a stack of states. When a me
 |**U**| Unpause game |
 |**F1**| Reset simulation |
 |**G**| Toggles gravity |
-|**Q**| Toggles mouse pointer (enables objects to be clicked) |
-|**L**| Toggles locked object (when object is clicked on) |
+|**Q**| Toggles mouse pointer _(enables objects to be clicked)_ |
+|**L**| Toggles locked object _(when object is clicked on)_ |
 |**Escape**| Back to main menu |
 |**NumPad 0**| Toggles player mode and camera mode |
 |**0**| Toggle display for AI pathfinding |
@@ -109,8 +109,8 @@ _The menu is made with a pushdown automata which is a stack of states. When a me
 |||
 | :---: | :---: |
 |**Up, Down, Left, Right Arrow**| Moves object |
-|**NumPad 2,4,6,8**| Rotates object on different axis (selected object only) |
-|**NumPad 5**| Move object on Y axis (selected object only) |
+|**NumPad 2,4,6,8**| Rotates object on different axis _(selected object only)_ |
+|**NumPad 5**| Move object on Y axis _(selected object only)_ |
 |**Mouse scroll and click**| After selecting the object, you can manually apply different forces to the object at certain points |
 <br />
 
