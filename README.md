@@ -13,13 +13,13 @@ The main framework was provided by Dr Rich Davison and he has given permission t
 <br /><br />
 
 ### Screenshots
-<a name = "raycast"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/main.gif" width = "350"></a> 
+<a name = "raycast"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/main.gif" width = "400"></a> 
 <br /><br />
 
 #### Raycasting
 _Raycasting are done against spheres, AABB, OBB and capsules. The ray is casted from the mouse pointer towards a point on the object. Debug info is shown when the object is clicked on._
 
-<a name = "raycast"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/raycast.PNG" width = "350"></a> 
+<a name = "raycast"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/raycast.PNG" width = "400"></a> 
 <br /><br />
 
 #### Object Collision Detection and Response
@@ -34,30 +34,30 @@ _Raycasting are done against spheres, AABB, OBB and capsules. The ray is casted 
 _Angular and linear impulses have been implemented. Objects are able to rotate away at the point of collision using torque.
 Different coefficient of restitutions have been used for various objects so their velocities will differ during collisions._ 
 
-<a name = "capSph"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/capsuleSphere.gif" width = "350"></a> 
-<a name = "sphereAABB"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/sphereAABB.gif" width = "350"></a> 
-<a name = "obbCapSph"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/obbCapSph2.gif" width = "350"></a> 
+<a name = "capSph"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/capsuleSphere.gif" width = "400"></a> 
+<a name = "sphereAABB"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/sphereAABB.gif" width = "400"></a> 
+<a name = "obbCapSph"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/obbCapSph2.gif" width = "400"></a> 
 <br /><br />
 
 #### Pathfinding 
 _The AI uses A* pathfinding to work it's way to the finishing point. If the blue AI sees a coin it will go after it. If the player has a pink coin, the AI will attempt to chase after player if they are close enough. <br />
 The AI recalculates a new path if it deviates from its original and it will teleport behind the player if it gets stuck._
 
-<a name = "ai"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/aiMovement.gif" width = "350"></a> 
+<a name = "ai"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/aiMovement.gif" width = "400"></a> 
 <br /><br />
 
 #### Constraints
 _The bridge consists of two ends having blocks of infinite masses. The middle blocks are connected together with a constraint. If one block moves, the others are affected as well.<br />
 The purple ball is constraint to a block floating in the air and is imitating a ball on the end of a rope._
 
-<a name = "bridge"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/bridge.PNG" width = "350"></a> 
-<a name = "constraint"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/constraint.gif" width = "350"></a> 
+<a name = "bridge"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/bridge.PNG" width = "400"></a> 
+<a name = "constraint"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/constraint.gif" width = "400"></a> 
 <br /><br />
 
 #### Pushdown Automata
 _The menu is made with a pushdown automata which is a stack of states. When a menu option is chosen it will get pushed onto the state stack and whichever state is on top of the stack will get executed. Upon pressing Escape the state will get popped off the top of the stack._
 
-<a name = "menu"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/start.PNG" width = "350"></a> 
+<a name = "menu"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/start.PNG" width = "400"></a> 
 <br /><br />
 
 ### Game Modes
