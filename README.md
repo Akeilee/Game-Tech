@@ -40,7 +40,7 @@ Different coefficient of restitutions have been used for various objects so thei
 <br /><br />
 
 #### Pathfinding 
-_The AI uses A* pathfinding to work it's way to the finishing point. If the blue AI sees a coin it will go after it. If the player has a pink coin, the AI will attempt to chase after player if they are close enough. <br />
+_The AI uses A* pathfinding to work it's way to the finishing point. If the red AI sees a coin it will go after it. If the player has a pink coin, the AI will attempt to chase after player if they are close enough. <br />
 The AI recalculates a new path if it deviates from its original and it will teleport behind the player if it gets stuck._
 
 <a name = "ai"><img src="https://github.com/Akeilee/Game-Tech/blob/main/Screenshots/aiMovement.gif" width = "400"></a> 
