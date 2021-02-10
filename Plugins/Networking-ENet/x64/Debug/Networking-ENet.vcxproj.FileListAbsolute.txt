@@ -1,0 +1,10 @@
+C:\Uni\Games Engineering Code\game-engineering-codebase\x64\Debug\Networking-ENet.pdb
+C:\Uni\Games Engineering Code\game-engineering-codebase\Plugins\Networking-ENet\x64\Debug\Networking-ENet.pdb
+C:\Users\Akeina\Desktop\New folder\x64\Debug\Networking-ENet.pdb
+C:\Users\Akeina\Desktop\New folder\Plugins\Networking-ENet\x64\Debug\Networking-ENet.pdb
+C:\Users\Akeina\Desktop\Tutorials\x64\Debug\Networking-ENet.pdb
+C:\Users\Akeina\Desktop\Tutorials\Plugins\Networking-ENet\x64\Debug\Networking-ENet.pdb
+C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\Networking-ENet.pdb
+C:\Users\Akeina\Desktop\Tutorials - Copy\Plugins\Networking-ENet\x64\Debug\Networking-ENet.pdb
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\x64\Debug\Networking-ENet.pdb
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\Plugins\Networking-ENet\x64\Debug\Networking-ENet.pdb

@@ -161,9 +161,12 @@ class GameScreen : public PushdownState {
 
 		if (practice == true) {
 			g->SetPracticeMode(true);
+			g->InitMixedGridWorld(5, 5, 3.5f, 3.5f);
+			g->useGravity = false;
 		}
 		if (practice == false) {
 			g->SetPracticeMode(false);
+			g->useGravity = true;
 		}
 
 	}

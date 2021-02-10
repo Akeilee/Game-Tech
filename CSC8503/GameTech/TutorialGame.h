@@ -43,6 +43,10 @@ namespace NCL {
 				return restart;
 			}
 
+			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
+			bool useGravity;
+
+
 		protected:
 
 			void CoinMineMovement(float dt);
@@ -82,7 +86,7 @@ namespace NCL {
 			void InitGameExamples();
 
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
-			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
+			
 			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
 			void InitDefaultFloor();
 			void BridgeConstraintTest();
@@ -126,7 +130,6 @@ namespace NCL {
 			PhysicsSystem* physics;
 			GameWorld* world;
 
-			bool useGravity;
 			bool inSelectionMode;
 
 			float		forceMagnitude;
@@ -177,6 +180,7 @@ namespace NCL {
 			GameObject* bonusBall;
 			GameObject* movingSphere;
 			vector<GameObject*> pingpong;
+			vector<GameObject*> testObjects;
 			bool practiceMode;
 
 			EnemyState enemyState;

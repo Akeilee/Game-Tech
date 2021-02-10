@@ -87,11 +87,6 @@ void TutorialGame::InitialiseAssets() {
 		(*into)->UploadToGPU();
 	};
 
-	if (!practiceMode) {
-		useGravity = true;
-		physics->UseGravity(useGravity);
-	}
-
 	loadFunc("cube.msh", &cubeMesh);
 	loadFunc("sphere.msh", &sphereMesh);
 	loadFunc("Male1.msh", &charMeshA);
@@ -134,9 +129,11 @@ void TutorialGame::UpdateGame(float dt) {
 
 	UpdateKeys();
 
+
 	if (!winGame && !loseGame) {
 		if (useGravity) {
 			Debug::Print("(G)ravity on", Vector2(5, 95));
+			physics->UseGravity(useGravity);
 		}
 		else {
 			Debug::Print("(G)ravity off", Vector2(5, 95));
@@ -685,11 +682,17 @@ void TutorialGame::SpawnFallingObject(float dt) {
 		spawntimer = 0;
 	}
 
+	for (auto i : fallingSpawns) {
+		if (i->GetName() == "cube") {
+			i->GetRenderObject()->SetDefaultTexture(basicTex);
+		}
+	}
+
 
 	if (delSpawns >= 60 && !fallingSpawns.empty()) {
 		for (auto i : fallingSpawns) {
 			if (i == fallingSpawns.front()) {
-				//i->GetTransform().SetPosition(Vector3(800, 600, 500));
+				i->GetTransform().SetPosition(Vector3(800, 600, 500));
 				i->SetIsActive(false);
 			}
 		}
@@ -1140,7 +1143,6 @@ void TutorialGame::InitWorld() {
 	BridgeConstraintTest();
 	BallConstraint();
 
-	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
 	Walls();
 
@@ -1373,7 +1375,8 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfH
 	capsule->GetPhysicsObject()->SetInverseMass(inverseMass);
 	capsule->GetPhysicsObject()->InitCubeInertia();
 	capsule->GetPhysicsObject()->SetCRes(0.7);
-	capsule->GetTransform().SetOrientation(Quaternion(0.4, 0.14, 0.55, 1));
+
+	capsule->GetTransform().SetOrientation(Quaternion(1, 0.5, 0.5, 1)); //horizontal
 
 	capsule->GetPhysicsObject()->SetState(ObjectState::DYNAMIC);
 
@@ -1428,18 +1431,29 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 	float sphereRadius = 1.0f;
 	Vector3 cubeDims = Vector3(1, 1, 1);
 
-	for (int x = 0; x < numCols; ++x) {
-		for (int z = 0; z < numRows; ++z) {
-			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
+	//for (int x = 0; x < numCols; ++x) {
+	//	for (int z = 0; z < numRows; ++z) {
+	//		Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 
-			if (rand() % 2) {
-				//AddCubeToWorld(position, cubeDims);
-				//AddCapsuleToWorld(position, 0.85f * 3, 0.3f * 3, 1.0);
-			}
-			else {
-				//AddCapsuleToWorld(position, 0.85f*3, 0.3f*3);
-				//AddSphereToWorld(position, sphereRadius);
-			}
+	//		if (rand() % 2) {
+	//			AddCubeToWorld(position, cubeDims);
+	//			//AddCapsuleToWorld(position, 0.85f * 3, 0.3f * 3, 1.0);
+	//		}
+	//		else {
+	//			AddCapsuleToWorld(position, 0.85f*3, 0.3f*3);
+	//			//AddSphereToWorld(position, sphereRadius);
+	//		}
+	//	}
+	//}
+
+
+	testObjects.push_back(AddCubeToWorld(Vector3(70,5,50), cubeDims));
+	testObjects.push_back(AddCapsuleToWorld(Vector3(75,5,50) ,0.85f * 3, 0.3f * 3, 1.0));
+	testObjects.push_back(AddSphereToWorld(Vector3(80,5,50), sphereRadius));
+
+	for (auto i : testObjects) {
+		if (i->GetName() == "cube") {
+			i->GetRenderObject()->SetDefaultTexture(basicTex);
 		}
 	}
 

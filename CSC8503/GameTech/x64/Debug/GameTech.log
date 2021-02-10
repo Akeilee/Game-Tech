@@ -1,66 +1,65 @@
 ﻿  TutorialGame.cpp
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(270,82): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(307,82): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(342,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(343,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(452,61): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(485,66): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(486,64): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(516,60): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(517,63): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(527,43): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(548,66): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(549,69): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(580,67): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(581,70): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(612,67): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(613,70): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(644,65): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(645,68): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(659,11): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(661,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(671,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(675,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(679,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(680,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1113,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1220,40): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1222,65): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1223,68): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1227,38): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1229,63): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1230,66): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1237,41): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1238,66): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1239,69): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1263,40): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1265,61): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1266,64): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1272,48): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1305,61): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1306,64): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1361,63): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1375,42): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1376,70): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1467,52): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1468,53): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1470,53): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1471,52): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1558,63): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1559,66): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1564,41): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1592,59): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1593,62): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1598,40): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1625,69): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1626,72): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1631,46): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1655,58): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1656,61): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1688,64): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1689,67): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1799,71): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(1904,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\GameTech\TutorialGame.cpp(2106,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\PhysicsObject.h(140): warning C4715: 'NCL::CSC8503::PhysicsObject::ToString': not all control paths return a value
-  GameTech.vcxproj -> C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\GameTech.exe
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(267,82): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(304,82): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(339,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(340,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(449,61): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(482,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(483,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(513,60): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(514,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(524,43): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(545,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(546,69): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(577,67): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(578,70): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(609,67): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(610,70): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(641,65): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(642,68): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(656,11): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(658,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(668,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(672,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(676,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(677,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1116,56): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1222,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1224,65): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1225,68): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1229,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1231,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1232,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1239,41): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1240,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1241,69): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1265,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1267,61): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1268,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1274,48): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1307,61): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1308,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1363,63): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1377,42): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1481,52): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1482,53): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1484,53): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1485,52): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1572,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1573,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1578,41): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1606,59): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1607,62): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1612,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1639,69): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1640,72): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1645,46): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1669,58): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1670,61): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1702,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1703,67): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1813,71): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(1918,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\GameTech\TutorialGame.cpp(2120,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\CSC8503Common\PhysicsObject.h(140): warning C4715: 'NCL::CSC8503::PhysicsObject::ToString': not all control paths return a value
+  GameTech.vcxproj -> D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\x64\Debug\GameTech.exe

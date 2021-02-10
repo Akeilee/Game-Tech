@@ -4,3 +4,5 @@ C:\Users\Akeina\Desktop\Tutorials\x64\Debug\CSC8503Common.pdb
 C:\Users\Akeina\Desktop\Tutorials\CSC8503\CSC8503Common\x64\Debug\CSC8503Common.pdb
 C:\Users\Akeina\Desktop\Tutorials - Copy\x64\Debug\CSC8503Common.pdb
 C:\Users\Akeina\Desktop\Tutorials - Copy\CSC8503\CSC8503Common\x64\Debug\CSC8503Common.pdb
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\x64\Debug\CSC8503Common.pdb
+D:\Akeina\Documents\NEWCASTLE\Uni\MSc\8503 Game Tech\Coursework\Tutorials - coursework  part\CSC8503\CSC8503Common\x64\Debug\CSC8503Common.pdb
